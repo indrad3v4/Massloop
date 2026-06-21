@@ -1,0 +1,349 @@
+2025-11-03 19:15:30.502 | SUCCESS  | __main__:<module>:70 - 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 19:15:34.273 | INFO     | externals:<module>:45 - sounddevice imported successfully
+2025-11-03 19:15:34.276 | INFO     | __main__:main:91 - ================================================================================
+2025-11-03 19:15:34.276 | INFO     | __main__:main:92 - 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 19:15:34.276 | INFO     | __main__:main:93 - ================================================================================
+2025-11-03 19:15:34.276 | INFO     | __main__:main:99 - Loading persistent state...
+2025-11-03 19:15:34.277 | SUCCESS  | state_manager:_load_all_state:101 - Settings loaded: data/config/settings.json
+2025-11-03 19:15:34.278 | SUCCESS  | state_manager:_load_all_state:111 - UI state loaded: data/config/ui_state.json
+2025-11-03 19:15:34.279 | SUCCESS  | state_manager:_load_all_state:121 - Session state loaded: data/config/session_state.json
+2025-11-03 19:15:34.279 | INFO     | state_manager:__init__:82 - StateManager initialized: data
+2025-11-03 19:15:34.279 | SUCCESS  | __main__:main:102 - State manager loaded
+2025-11-03 19:15:34.280 | DEBUG    | __main__:main:107 - Shutdown handlers registered
+2025-11-03 19:15:34.280 | INFO     | __main__:main:110 - Initializing MassloopApp...
+2025-11-03 19:15:34.280 | INFO     | ui:__init__:226 - State manager initialized: StateManager
+2025-11-03 19:15:34.281 | INFO     | externals:__init__:75 - FileStorage initialized: data
+2025-11-03 19:15:34.281 | INFO     | externals:__init__:372 - ✓ sounddevice available - real device detection enabled
+2025-11-03 19:15:34.281 | SUCCESS  | externals:__init__:1588 - ✅ Librosa analyzer initialized
+2025-11-03 19:15:34.281 | SUCCESS  | externals:__init__:693 - ✓ CometAPI Suno v5 initialized
+2025-11-03 19:15:34.281 | DEBUG    | externals:__init__:694 -   Base URL: https://api.cometapi.com
+2025-11-03 19:15:34.282 | SUCCESS  | externals:__init__:1921 - 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 19:15:34.282 | SUCCESS  | ui:__init__:245 - 💾 Budget restored from state: €6.00
+2025-11-03 19:15:34.282 | INFO     | usecases:__init__:241 - LivePerformanceUseCase initialized
+2025-11-03 19:15:34.283 | INFO     | usecases:__init__:242 -   Orchestrator: ✅
+2025-11-03 19:15:34.283 | INFO     | usecases:__init__:243 -   Audio Analyzer: ✅
+2025-11-03 19:15:34.283 | INFO     | usecases:__init__:244 -   Mixer: ❌
+2025-11-03 19:15:34.283 | SUCCESS  | ui:__init__:270 - 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 19:15:34.283 | INFO     | ui:__init__:272 - ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 19:15:34.284 | INFO     | ui:__init__:304 - Massloop.ai TUI initialized with state persistence
+2025-11-03 19:15:34.284 | SUCCESS  | __main__:main:112 - App initialized
+2025-11-03 19:15:34.284 | INFO     | __main__:main:120 - 🚀 Starting async event loop...
+2025-11-03 19:15:34.284 | INFO     | __main__:main:121 - ================================================================================
+2025-11-03 19:15:34.466 | INFO     | externals:initialize:388 - Audio initialized: 44100Hz, 2ch
+2025-11-03 19:15:34.466 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 19:15:34.467 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 19:15:34.473 | WARNING  | ui:_restore_ui_state:405 - Could not restore UI state: unhashable type: 'dict'
+2025-11-03 19:15:34.475 | SUCCESS  | externals:load_profile:251 - ✓ Profile loaded: Okti (0 references)
+2025-11-03 19:15:34.475 | SUCCESS  | ui:run:501 - Restored profile: Okti
+2025-11-03 19:15:36.485 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 19:15:36.487 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 19:15:36.488 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 19:15:36.488 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 19:15:36.489 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 19:41:02.442 | SUCCESS  | __main__:<module>:70 - 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 19:41:06.032 | INFO     | externals:<module>:45 - sounddevice imported successfully
+2025-11-03 19:41:06.037 | INFO     | __main__:main:91 - ================================================================================
+2025-11-03 19:41:06.038 | INFO     | __main__:main:92 - 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 19:41:06.038 | INFO     | __main__:main:93 - ================================================================================
+2025-11-03 19:41:06.038 | INFO     | __main__:main:99 - Loading persistent state...
+2025-11-03 19:41:06.040 | SUCCESS  | state_manager:_load_all_state:101 - Settings loaded: data/config/settings.json
+2025-11-03 19:41:06.041 | SUCCESS  | state_manager:_load_all_state:111 - UI state loaded: data/config/ui_state.json
+2025-11-03 19:41:06.042 | SUCCESS  | state_manager:_load_all_state:121 - Session state loaded: data/config/session_state.json
+2025-11-03 19:41:06.042 | INFO     | state_manager:__init__:82 - StateManager initialized: data
+2025-11-03 19:41:06.043 | SUCCESS  | __main__:main:102 - State manager loaded
+2025-11-03 19:41:06.043 | DEBUG    | __main__:main:107 - Shutdown handlers registered
+2025-11-03 19:41:06.043 | INFO     | __main__:main:110 - Initializing MassloopApp...
+2025-11-03 19:41:06.044 | INFO     | ui:__init__:226 - State manager initialized: StateManager
+2025-11-03 19:41:06.045 | INFO     | externals:__init__:75 - FileStorage initialized: data
+2025-11-03 19:41:06.045 | INFO     | externals:__init__:372 - ✓ sounddevice available - real device detection enabled
+2025-11-03 19:41:06.045 | SUCCESS  | externals:__init__:1588 - ✅ Librosa analyzer initialized
+2025-11-03 19:41:06.046 | SUCCESS  | externals:__init__:693 - ✓ CometAPI Suno v5 initialized
+2025-11-03 19:41:06.047 | DEBUG    | externals:__init__:694 -   Base URL: https://api.cometapi.com
+2025-11-03 19:41:06.047 | SUCCESS  | externals:__init__:1921 - 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 19:41:06.048 | SUCCESS  | ui:__init__:245 - 💾 Budget restored from state: €6.00
+2025-11-03 19:41:06.048 | INFO     | usecases:__init__:241 - LivePerformanceUseCase initialized
+2025-11-03 19:41:06.049 | INFO     | usecases:__init__:242 -   Orchestrator: ✅
+2025-11-03 19:41:06.050 | INFO     | usecases:__init__:243 -   Audio Analyzer: ✅
+2025-11-03 19:41:06.052 | INFO     | usecases:__init__:244 -   Mixer: ❌
+2025-11-03 19:41:06.052 | SUCCESS  | ui:__init__:270 - 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 19:41:06.053 | INFO     | ui:__init__:272 - ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 19:41:06.053 | INFO     | ui:__init__:304 - Massloop.ai TUI initialized with state persistence
+2025-11-03 19:41:06.053 | SUCCESS  | __main__:main:112 - App initialized
+2025-11-03 19:41:06.054 | INFO     | __main__:main:120 - 🚀 Starting async event loop...
+2025-11-03 19:41:06.054 | INFO     | __main__:main:121 - ================================================================================
+2025-11-03 19:41:06.125 | INFO     | externals:initialize:388 - Audio initialized: 44100Hz, 2ch
+2025-11-03 19:41:06.126 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 19:41:06.127 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 19:41:06.135 | WARNING  | ui:_restore_ui_state:405 - Could not restore UI state: unhashable type: 'dict'
+2025-11-03 19:41:06.136 | SUCCESS  | externals:load_profile:251 - ✓ Profile loaded: Okti (0 references)
+2025-11-03 19:41:06.136 | SUCCESS  | ui:run:501 - Restored profile: Okti
+2025-11-03 19:41:08.147 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 19:41:08.148 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 19:41:08.149 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 19:41:08.149 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 19:41:08.150 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 19:41:10.124 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 19:41:10.125 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 19:41:10.126 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 19:41:10.126 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 19:41:10.127 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 19:41:10.128 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 19:41:10.128 | SUCCESS  | ui:_save_app_state:568 - Application state saved successfully
+2025-11-03 19:41:11.136 | INFO     | __main__:main:154 - ================================================================================
+2025-11-03 19:41:11.137 | INFO     | __main__:main:155 - 🏁 Massloop.ai session ended
+2025-11-03 19:41:11.137 | INFO     | __main__:main:156 - ================================================================================
+2025-11-03 21:07:47.040 | SUCCESS  | __main__:<module>:70 - 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 21:07:50.447 | INFO     | externals:<module>:45 - sounddevice imported successfully
+2025-11-03 21:07:50.449 | INFO     | __main__:main:91 - ================================================================================
+2025-11-03 21:07:50.450 | INFO     | __main__:main:92 - 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 21:07:50.450 | INFO     | __main__:main:93 - ================================================================================
+2025-11-03 21:07:50.451 | INFO     | __main__:main:99 - Loading persistent state...
+2025-11-03 21:07:50.452 | SUCCESS  | state_manager:_load_all_state:101 - Settings loaded: data/config/settings.json
+2025-11-03 21:07:50.453 | SUCCESS  | state_manager:_load_all_state:111 - UI state loaded: data/config/ui_state.json
+2025-11-03 21:07:50.453 | SUCCESS  | state_manager:_load_all_state:121 - Session state loaded: data/config/session_state.json
+2025-11-03 21:07:50.454 | INFO     | state_manager:__init__:82 - StateManager initialized: data
+2025-11-03 21:07:50.454 | SUCCESS  | __main__:main:102 - State manager loaded
+2025-11-03 21:07:50.454 | DEBUG    | __main__:main:107 - Shutdown handlers registered
+2025-11-03 21:07:50.455 | INFO     | __main__:main:110 - Initializing MassloopApp...
+2025-11-03 21:07:50.455 | INFO     | ui:__init__:226 - State manager initialized: StateManager
+2025-11-03 21:07:50.456 | INFO     | externals:__init__:75 - FileStorage initialized: data
+2025-11-03 21:07:50.457 | INFO     | externals:__init__:372 - ✓ sounddevice available - real device detection enabled
+2025-11-03 21:07:50.457 | SUCCESS  | externals:__init__:1589 - ✅ Librosa analyzer initialized
+2025-11-03 21:07:50.458 | SUCCESS  | externals:__init__:694 - ✓ CometAPI Suno v5 initialized
+2025-11-03 21:07:50.458 | DEBUG    | externals:__init__:695 -   Base URL: https://api.cometapi.com
+2025-11-03 21:07:50.458 | SUCCESS  | externals:__init__:1922 - 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 21:07:50.459 | SUCCESS  | ui:__init__:245 - 💾 Budget restored from state: €6.00
+2025-11-03 21:07:50.460 | INFO     | usecases:__init__:241 - LivePerformanceUseCase initialized
+2025-11-03 21:07:50.460 | INFO     | usecases:__init__:242 -   Orchestrator: ✅
+2025-11-03 21:07:50.460 | INFO     | usecases:__init__:243 -   Audio Analyzer: ✅
+2025-11-03 21:07:50.460 | INFO     | usecases:__init__:244 -   Mixer: ❌
+2025-11-03 21:07:50.460 | SUCCESS  | ui:__init__:270 - 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 21:07:50.461 | INFO     | ui:__init__:272 - ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 21:07:50.461 | INFO     | ui:__init__:304 - Massloop.ai TUI initialized with state persistence
+2025-11-03 21:07:50.461 | SUCCESS  | __main__:main:112 - App initialized
+2025-11-03 21:07:50.462 | INFO     | __main__:main:120 - 🚀 Starting async event loop...
+2025-11-03 21:07:50.462 | INFO     | __main__:main:121 - ================================================================================
+2025-11-03 21:07:50.631 | INFO     | externals:initialize:388 - Audio initialized: 44100Hz, 2ch
+2025-11-03 21:07:50.633 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:07:50.635 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:07:50.646 | WARNING  | ui:_restore_ui_state:405 - Could not restore UI state: unhashable type: 'dict'
+2025-11-03 21:07:50.647 | SUCCESS  | externals:load_profile:251 - ✓ Profile loaded: Okti (0 references)
+2025-11-03 21:07:50.648 | SUCCESS  | ui:run:501 - Restored profile: Okti
+2025-11-03 21:07:52.668 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:07:52.669 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:07:52.670 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:07:52.671 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:07:52.673 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:07:56.238 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:07:56.239 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:07:56.240 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:08:41.124 | INFO     | ui:_record_voice_sample:1834 - Recording device: Built-in Microphone
+2025-11-03 21:08:51.281 | SUCCESS  | ui:_record_voice_sample:1887 - Voice recorded successfully
+2025-11-03 21:08:51.283 | SUCCESS  | ui:_record_voice_sample:1904 - Voice saved to: data/temp_recordings/voice_sample_20251103_210851.wav
+2025-11-03 21:09:04.953 | SUCCESS  | ui:_profile_wizard:1349 - ✅ Voice saved: indradeva_voice
+2025-11-03 21:09:07.689 | INFO     | usecases:create_profile_with_persona:1061 - 🎤 PERSONA SETUP WORKFLOW: indradeva
+2025-11-03 21:09:07.690 | SUCCESS  | usecases:create_profile_with_persona:1080 - ✅ STEP 1 complete: Profile entity created
+2025-11-03 21:09:07.690 | INFO     | usecases:create_profile_with_persona:1083 - STEP 2/4: Generating initial track (chirp-auk)...
+2025-11-03 21:09:07.690 | INFO     | externals:generate_track:717 - [track_1762200547690] 🎵 GENERATE START
+2025-11-03 21:09:07.691 | INFO     | externals:generate_track:746 - [track_1762200547690] 🎵 Prompt: indradeva signature sound...
+2025-11-03 21:09:07.691 | INFO     | externals:generate_track:747 - [track_1762200547690] 🏷️  Tags: None...
+2025-11-03 21:09:07.691 | INFO     | externals:generate_track:773 - [track_1762200547690] 🎵 Mode: CUSTOMIZATION
+2025-11-03 21:09:07.691 | DEBUG    | externals:generate_track:781 - [track_1762200547690] payload: {
+  "prompt": "indradeva signature sound",
+  "tags": "None",
+  "mv": "chirp-auk",
+  "title": "Track_1762200547"
+}...
+2025-11-03 21:09:07.691 | DEBUG    | externals:generate_track:794 - [track_1762200547690] ✓ Payload valid JSON
+2025-11-03 21:09:07.691 | DEBUG    | externals:generate_track:808 - [track_1762200547690] POST https://api.cometapi.com/suno/submit/music
+2025-11-03 21:09:13.976 | DEBUG    | externals:generate_track:828 - [track_1762200547690] HTTP 200
+2025-11-03 21:09:13.976 | DEBUG    | externals:generate_track:829 - [track_1762200547690] Content-Type: application/json
+2025-11-03 21:09:13.976 | SUCCESS  | externals:generate_track:861 - [track_1762200547690] ✅ Task submitted: dfaef9fd-9563-4c71-98f6-4979cc10b160
+2025-11-03 21:09:13.977 | INFO     | externals:_poll_completion:896 - ⏳ Polling dfaef9fd-9563-4c71-98f6-4979cc10b160 (max 240s)...
+2025-11-03 21:09:13.977 | DEBUG    | externals:_poll_completion:906 - Task ID: dfaef9fd-9563-4c71-98f6-4979cc10b160 (36 chars)
+2025-11-03 21:09:13.977 | DEBUG    | externals:_poll_completion:907 - Endpoint: https://api.cometapi.com/suno/get/music
+2025-11-03 21:09:13.977 | DEBUG    | externals:_poll_completion:925 - [Attempt 1] GET https://api.cometapi.com/suno/get/music?ids=dfaef9fd-9563-4c71-98f6-4979cc10b160
+2025-11-03 21:09:14.490 | DEBUG    | externals:_poll_completion:938 - HTTP 200
+2025-11-03 21:09:14.490 | ERROR    | externals:_poll_completion:958 - ❌ JSON parse error (attempt 1)
+2025-11-03 21:09:14.490 | ERROR    | externals:_poll_completion:959 -    Error: Expecting value at position 0
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:960 -    Status: 200
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:961 -    Content-Type: text/html; charset=utf-8
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:962 -    Response (first 300 chars):
+<!doctype html>
+<html lang="zh" class="light">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.c
+2025-11-03 21:09:14.491 | CRITICAL | externals:_poll_completion:966 - ❌ CRITICAL: API returned HTML error page!
+2025-11-03 21:09:14.492 | CRITICAL | externals:_poll_completion:967 -    Check: API key, endpoint URL, API status
+2025-11-03 21:09:14.492 | SUCCESS  | usecases:create_profile_with_persona:1103 - ✅ STEP 2 complete: Track generated (clip_id: mock-id-12345)
+2025-11-03 21:09:14.492 | INFO     | usecases:create_profile_with_persona:1111 - STEP 3/4: Creating Suno persona...
+2025-11-03 21:09:14.493 | INFO     | externals:create_persona_from_clip:1105 - 🎤 Creating persona: indradeva
+2025-11-03 21:09:14.493 | DEBUG    | externals:create_persona_from_clip:1106 -    Clip: mock-id-12345
+2025-11-03 21:09:14.493 | DEBUG    | externals:create_persona_from_clip:1107 -    Description: indradeva
+2025-11-03 21:09:14.493 | DEBUG    | externals:create_persona_from_clip:1133 - Payload: {
+  "root_clip_id": "mock-id-12345",
+  "name": "indradeva",
+  "description": "indradeva",
+  "clips": [
+    "mock-id-12345"
+  ],
+  "is_public": false
+}...
+2025-11-03 21:09:14.493 | DEBUG    | externals:create_persona_from_clip:1144 - POST https://api.cometapi.com/suno/persona/create
+2025-11-03 21:09:16.327 | ERROR    | externals:create_persona_from_clip:1160 - ❌ HTTP 400
+2025-11-03 21:09:16.327 | ERROR    | externals:create_persona_from_clip:1161 -    {"code":"fail_to_fetch_task","message":"{\"error\":{\"message\":\"clip id can not found\",\"type\":\"comet_api_error\",\"param\":\"\",\"code\":\"clip_id_error\"}}","data":null}
+2025-11-03 21:09:16.328 | ERROR    | usecases:create_profile_with_persona:1121 - ❌ STEP 3 failed: Could not create persona
+2025-11-03 21:09:16.331 | DEBUG    | externals:save_profile:199 - Profile saved with 20 fields: data/profiles/indradeva.json
+2025-11-03 21:09:16.331 | SUCCESS  | externals:save_profile:200 - ✓ Profile saved: data/profiles/indradeva.json
+2025-11-03 21:09:16.840 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:09:16.841 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:09:16.842 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:09:16.842 | SUCCESS  | ui:_profile_wizard:1452 - Profile 'indradeva' saved and set as active
+2025-11-03 21:15:25.429 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:15:25.436 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:15:25.437 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:15:25.441 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:15:25.442 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:15:28.848 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:15:28.849 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:15:28.849 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:15:28.850 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:15:28.850 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:15:28.851 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:15:28.851 | SUCCESS  | ui:_save_app_state:568 - Application state saved successfully
+2025-11-03 21:15:29.863 | INFO     | __main__:main:154 - ================================================================================
+2025-11-03 21:15:29.864 | INFO     | __main__:main:155 - 🏁 Massloop.ai session ended
+2025-11-03 21:15:29.864 | INFO     | __main__:main:156 - ================================================================================
+2025-11-03 21:33:50.731 | SUCCESS  | __main__:<module>:70 - 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 21:33:54.645 | INFO     | externals:<module>:45 - sounddevice imported successfully
+2025-11-03 21:33:54.653 | INFO     | __main__:main:91 - ================================================================================
+2025-11-03 21:33:54.653 | INFO     | __main__:main:92 - 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 21:33:54.653 | INFO     | __main__:main:93 - ================================================================================
+2025-11-03 21:33:54.654 | INFO     | __main__:main:99 - Loading persistent state...
+2025-11-03 21:33:54.655 | SUCCESS  | state_manager:_load_all_state:101 - Settings loaded: data/config/settings.json
+2025-11-03 21:33:54.655 | SUCCESS  | state_manager:_load_all_state:111 - UI state loaded: data/config/ui_state.json
+2025-11-03 21:33:54.656 | SUCCESS  | state_manager:_load_all_state:121 - Session state loaded: data/config/session_state.json
+2025-11-03 21:33:54.659 | INFO     | state_manager:__init__:82 - StateManager initialized: data
+2025-11-03 21:33:54.661 | SUCCESS  | __main__:main:102 - State manager loaded
+2025-11-03 21:33:54.662 | DEBUG    | __main__:main:107 - Shutdown handlers registered
+2025-11-03 21:33:54.662 | INFO     | __main__:main:110 - Initializing MassloopApp...
+2025-11-03 21:33:54.662 | INFO     | ui:__init__:226 - State manager initialized: StateManager
+2025-11-03 21:33:54.663 | INFO     | externals:__init__:75 - FileStorage initialized: data
+2025-11-03 21:33:54.665 | INFO     | externals:__init__:372 - ✓ sounddevice available - real device detection enabled
+2025-11-03 21:33:54.667 | SUCCESS  | externals:__init__:1607 - ✅ Librosa analyzer initialized
+2025-11-03 21:33:54.668 | SUCCESS  | externals:__init__:694 - ✓ CometAPI Suno v5 initialized
+2025-11-03 21:33:54.668 | DEBUG    | externals:__init__:695 -   Base URL: https://api.cometapi.com
+2025-11-03 21:33:54.668 | SUCCESS  | externals:__init__:1940 - 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 21:33:54.669 | SUCCESS  | ui:__init__:245 - 💾 Budget restored from state: €6.00
+2025-11-03 21:33:54.670 | INFO     | usecases:__init__:241 - LivePerformanceUseCase initialized
+2025-11-03 21:33:54.671 | INFO     | usecases:__init__:242 -   Orchestrator: ✅
+2025-11-03 21:33:54.671 | INFO     | usecases:__init__:243 -   Audio Analyzer: ✅
+2025-11-03 21:33:54.672 | INFO     | usecases:__init__:244 -   Mixer: ❌
+2025-11-03 21:33:54.675 | SUCCESS  | ui:__init__:270 - 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 21:33:54.676 | INFO     | ui:__init__:272 - ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 21:33:54.677 | INFO     | ui:__init__:304 - Massloop.ai TUI initialized with state persistence
+2025-11-03 21:33:54.678 | SUCCESS  | __main__:main:112 - App initialized
+2025-11-03 21:33:54.678 | INFO     | __main__:main:120 - 🚀 Starting async event loop...
+2025-11-03 21:33:54.679 | INFO     | __main__:main:121 - ================================================================================
+2025-11-03 21:33:54.850 | INFO     | externals:initialize:388 - Audio initialized: 44100Hz, 2ch
+2025-11-03 21:33:54.850 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:33:54.851 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:33:54.856 | WARNING  | ui:_restore_ui_state:405 - Could not restore UI state: unhashable type: 'dict'
+2025-11-03 21:33:54.857 | SUCCESS  | externals:load_profile:251 - ✓ Profile loaded: indradeva (0 references)
+2025-11-03 21:33:54.858 | SUCCESS  | ui:run:501 - Restored profile: indradeva
+2025-11-03 21:33:56.871 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:33:56.873 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:33:56.874 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:33:56.875 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:33:56.878 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:33:57.734 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:33:57.735 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:33:57.736 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:34:17.113 | INFO     | ui:_record_voice_sample:1834 - Recording device: Built-in Microphone
+2025-11-03 21:34:27.339 | SUCCESS  | ui:_record_voice_sample:1887 - Voice recorded successfully
+2025-11-03 21:34:27.341 | SUCCESS  | ui:_record_voice_sample:1904 - Voice saved to: data/temp_recordings/voice_sample_20251103_213427.wav
+2025-11-03 21:34:41.812 | SUCCESS  | ui:_profile_wizard:1349 - ✅ Voice saved: test_voice
+2025-11-03 21:34:46.390 | INFO     | usecases:create_profile_with_persona:1061 - 🎤 PERSONA SETUP WORKFLOW: test
+2025-11-03 21:34:46.390 | SUCCESS  | usecases:create_profile_with_persona:1080 - ✅ STEP 1 complete: Profile entity created
+2025-11-03 21:34:46.391 | INFO     | usecases:create_profile_with_persona:1083 - STEP 2/4: Generating initial track (chirp-auk)...
+2025-11-03 21:34:46.391 | INFO     | externals:generate_track:717 - [track_1762202086391] 🎵 GENERATE START
+2025-11-03 21:34:46.391 | INFO     | externals:generate_track:746 - [track_1762202086391] 🎵 Prompt: test signature sound...
+2025-11-03 21:34:46.391 | INFO     | externals:generate_track:747 - [track_1762202086391] 🏷️  Tags: None...
+2025-11-03 21:34:46.392 | INFO     | externals:generate_track:773 - [track_1762202086391] 🎵 Mode: CUSTOMIZATION
+2025-11-03 21:34:46.392 | DEBUG    | externals:generate_track:781 - [track_1762202086391] payload: {
+  "prompt": "test signature sound",
+  "tags": "None",
+  "mv": "chirp-auk",
+  "title": "Track_1762202086"
+}...
+2025-11-03 21:34:46.392 | DEBUG    | externals:generate_track:794 - [track_1762202086391] ✓ Payload valid JSON
+2025-11-03 21:34:46.393 | DEBUG    | externals:generate_track:808 - [track_1762202086391] POST https://api.cometapi.com/suno/submit/music
+2025-11-03 21:34:53.165 | DEBUG    | externals:generate_track:828 - [track_1762202086391] HTTP 200
+2025-11-03 21:34:53.166 | DEBUG    | externals:generate_track:829 - [track_1762202086391] Content-Type: application/json
+2025-11-03 21:34:53.166 | SUCCESS  | externals:generate_track:861 - [track_1762202086391] ✅ Task submitted: 14bf2c92-85b2-4e9b-8aa8-a780d4dede6a
+2025-11-03 21:34:53.166 | INFO     | externals:_poll_completion:903 - ⏳ Polling 14bf2c92-85b2-4e9b-8aa8-a780d4dede6a (max 240s)...
+2025-11-03 21:34:53.166 | DEBUG    | externals:_poll_completion:910 - Task ID: 14bf2c92-85b2-4e9b-8aa8-a780d4dede6a
+2025-11-03 21:34:53.167 | DEBUG    | externals:_poll_completion:911 - Endpoint: POST https://api.cometapi.com/suno/get/music
+2025-11-03 21:34:53.167 | DEBUG    | externals:_poll_completion:925 - [Attempt 1] POST /suno/get/music with ids=[14bf2c92-85b2-4e9b-8aa8-a780d4dede6a]
+2025-11-03 21:34:53.404 | DEBUG    | externals:_poll_completion:935 - HTTP 200
+2025-11-03 21:34:53.404 | ERROR    | externals:_poll_completion:952 - ❌ JSON parse error (attempt 1)
+2025-11-03 21:34:53.405 | ERROR    | externals:_poll_completion:953 -    Error: Expecting value at position 0
+2025-11-03 21:34:53.405 | ERROR    | externals:_poll_completion:954 -    Content-Type: text/html; charset=utf-8
+2025-11-03 21:34:53.406 | ERROR    | externals:_poll_completion:955 -    Response (first 300 chars):
+<!doctype html>
+<html lang="zh" class="light">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.c
+2025-11-03 21:34:53.406 | CRITICAL | externals:_poll_completion:959 - ❌ CRITICAL: API returned HTML error page!
+2025-11-03 21:34:53.407 | CRITICAL | externals:_poll_completion:960 -    Check: API key, endpoint URL, API status
+2025-11-03 21:34:53.407 | SUCCESS  | usecases:create_profile_with_persona:1103 - ✅ STEP 2 complete: Track generated (clip_id: mock-id-12345)
+2025-11-03 21:34:53.407 | INFO     | usecases:create_profile_with_persona:1111 - STEP 3/4: Creating Suno persona...
+2025-11-03 21:34:53.407 | INFO     | externals:create_persona_from_clip:1123 - 🎤 Creating persona: test
+2025-11-03 21:34:53.408 | DEBUG    | externals:create_persona_from_clip:1124 -    Clip: mock-id-12345
+2025-11-03 21:34:53.408 | DEBUG    | externals:create_persona_from_clip:1125 -    Description: test
+2025-11-03 21:34:53.408 | DEBUG    | externals:create_persona_from_clip:1151 - Payload: {
+  "root_clip_id": "mock-id-12345",
+  "name": "test",
+  "description": "test",
+  "clips": [
+    "mock-id-12345"
+  ],
+  "is_public": false
+}...
+2025-11-03 21:34:53.409 | DEBUG    | externals:create_persona_from_clip:1162 - POST https://api.cometapi.com/suno/persona/create
+2025-11-03 21:34:54.195 | ERROR    | externals:create_persona_from_clip:1178 - ❌ HTTP 400
+2025-11-03 21:34:54.195 | ERROR    | externals:create_persona_from_clip:1179 -    {"code":"fail_to_fetch_task","message":"{\"error\":{\"message\":\"clip id can not found\",\"type\":\"comet_api_error\",\"param\":\"\",\"code\":\"clip_id_error\"}}","data":null}
+2025-11-03 21:34:54.196 | ERROR    | usecases:create_profile_with_persona:1121 - ❌ STEP 3 failed: Could not create persona
+2025-11-03 21:34:54.198 | DEBUG    | externals:save_profile:199 - Profile saved with 20 fields: data/profiles/test.json
+2025-11-03 21:34:54.198 | SUCCESS  | externals:save_profile:200 - ✓ Profile saved: data/profiles/test.json
+2025-11-03 21:34:54.704 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:34:54.705 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:34:54.707 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:34:54.708 | SUCCESS  | ui:_profile_wizard:1452 - Profile 'test' saved and set as active
+2025-11-03 21:37:51.772 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:37:51.778 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:37:51.779 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:37:51.782 | INFO     | externals:get_available_devices:410 - ✓ sounddevice working: 2 devices
+2025-11-03 21:37:51.783 | INFO     | externals:get_available_devices:432 -   • Built-in Output [DEFAULT]
+2025-11-03 21:37:53.020 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:37:53.021 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:37:53.022 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:37:53.023 | SUCCESS  | state_manager:save_all:135 - Settings saved
+2025-11-03 21:37:53.023 | SUCCESS  | state_manager:save_all:144 - UI state saved
+2025-11-03 21:37:53.024 | SUCCESS  | state_manager:save_all:153 - Session state saved
+2025-11-03 21:37:53.024 | SUCCESS  | ui:_save_app_state:568 - Application state saved successfully
+2025-11-03 21:37:54.035 | INFO     | __main__:main:154 - ================================================================================
+2025-11-03 21:37:54.035 | INFO     | __main__:main:155 - 🏁 Massloop.ai session ended
+2025-11-03 21:37:54.036 | INFO     | __main__:main:156 - ================================================================================

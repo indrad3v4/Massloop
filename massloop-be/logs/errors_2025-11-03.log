@@ -1,0 +1,58 @@
+2025-11-03 21:09:14.490 | ERROR    | externals:_poll_completion:958 - ❌ JSON parse error (attempt 1)
+
+2025-11-03 21:09:14.490 | ERROR    | externals:_poll_completion:959 -    Error: Expecting value at position 0
+
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:960 -    Status: 200
+
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:961 -    Content-Type: text/html; charset=utf-8
+
+2025-11-03 21:09:14.491 | ERROR    | externals:_poll_completion:962 -    Response (first 300 chars):
+<!doctype html>
+<html lang="zh" class="light">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.c
+
+2025-11-03 21:09:14.491 | CRITICAL | externals:_poll_completion:966 - ❌ CRITICAL: API returned HTML error page!
+
+2025-11-03 21:09:14.492 | CRITICAL | externals:_poll_completion:967 -    Check: API key, endpoint URL, API status
+
+2025-11-03 21:09:16.327 | ERROR    | externals:create_persona_from_clip:1160 - ❌ HTTP 400
+
+2025-11-03 21:09:16.327 | ERROR    | externals:create_persona_from_clip:1161 -    {"code":"fail_to_fetch_task","message":"{\"error\":{\"message\":\"clip id can not found\",\"type\":\"comet_api_error\",\"param\":\"\",\"code\":\"clip_id_error\"}}","data":null}
+
+2025-11-03 21:09:16.328 | ERROR    | usecases:create_profile_with_persona:1121 - ❌ STEP 3 failed: Could not create persona
+
+2025-11-03 21:34:53.404 | ERROR    | externals:_poll_completion:952 - ❌ JSON parse error (attempt 1)
+
+2025-11-03 21:34:53.405 | ERROR    | externals:_poll_completion:953 -    Error: Expecting value at position 0
+
+2025-11-03 21:34:53.405 | ERROR    | externals:_poll_completion:954 -    Content-Type: text/html; charset=utf-8
+
+2025-11-03 21:34:53.406 | ERROR    | externals:_poll_completion:955 -    Response (first 300 chars):
+<!doctype html>
+<html lang="zh" class="light">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.c
+
+2025-11-03 21:34:53.406 | CRITICAL | externals:_poll_completion:959 - ❌ CRITICAL: API returned HTML error page!
+
+2025-11-03 21:34:53.407 | CRITICAL | externals:_poll_completion:960 -    Check: API key, endpoint URL, API status
+
+2025-11-03 21:34:54.195 | ERROR    | externals:create_persona_from_clip:1178 - ❌ HTTP 400
+
+2025-11-03 21:34:54.195 | ERROR    | externals:create_persona_from_clip:1179 -    {"code":"fail_to_fetch_task","message":"{\"error\":{\"message\":\"clip id can not found\",\"type\":\"comet_api_error\",\"param\":\"\",\"code\":\"clip_id_error\"}}","data":null}
+
+2025-11-03 21:34:54.196 | ERROR    | usecases:create_profile_with_persona:1121 - ❌ STEP 3 failed: Could not create persona
+

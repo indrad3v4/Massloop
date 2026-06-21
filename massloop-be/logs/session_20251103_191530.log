@@ -1,0 +1,42 @@
+2025-11-03 19:15:30.502 | SUCCESS  | 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 19:15:34.273 | INFO     | sounddevice imported successfully
+2025-11-03 19:15:34.276 | INFO     | ================================================================================
+2025-11-03 19:15:34.276 | INFO     | 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 19:15:34.276 | INFO     | ================================================================================
+2025-11-03 19:15:34.276 | INFO     | Loading persistent state...
+2025-11-03 19:15:34.277 | SUCCESS  | Settings loaded: data/config/settings.json
+2025-11-03 19:15:34.278 | SUCCESS  | UI state loaded: data/config/ui_state.json
+2025-11-03 19:15:34.279 | SUCCESS  | Session state loaded: data/config/session_state.json
+2025-11-03 19:15:34.279 | INFO     | StateManager initialized: data
+2025-11-03 19:15:34.279 | SUCCESS  | State manager loaded
+2025-11-03 19:15:34.280 | DEBUG    | Shutdown handlers registered
+2025-11-03 19:15:34.280 | INFO     | Initializing MassloopApp...
+2025-11-03 19:15:34.280 | INFO     | State manager initialized: StateManager
+2025-11-03 19:15:34.281 | INFO     | FileStorage initialized: data
+2025-11-03 19:15:34.281 | INFO     | ✓ sounddevice available - real device detection enabled
+2025-11-03 19:15:34.281 | SUCCESS  | ✅ Librosa analyzer initialized
+2025-11-03 19:15:34.281 | SUCCESS  | ✓ CometAPI Suno v5 initialized
+2025-11-03 19:15:34.281 | DEBUG    |   Base URL: https://api.cometapi.com
+2025-11-03 19:15:34.282 | SUCCESS  | 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 19:15:34.282 | SUCCESS  | 💾 Budget restored from state: €6.00
+2025-11-03 19:15:34.282 | INFO     | LivePerformanceUseCase initialized
+2025-11-03 19:15:34.283 | INFO     |   Orchestrator: ✅
+2025-11-03 19:15:34.283 | INFO     |   Audio Analyzer: ✅
+2025-11-03 19:15:34.283 | INFO     |   Mixer: ❌
+2025-11-03 19:15:34.283 | SUCCESS  | 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 19:15:34.283 | INFO     | ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 19:15:34.284 | INFO     | Massloop.ai TUI initialized with state persistence
+2025-11-03 19:15:34.284 | SUCCESS  | App initialized
+2025-11-03 19:15:34.284 | INFO     | 🚀 Starting async event loop...
+2025-11-03 19:15:34.284 | INFO     | ================================================================================
+2025-11-03 19:15:34.466 | INFO     | Audio initialized: 44100Hz, 2ch
+2025-11-03 19:15:34.466 | INFO     | ✓ sounddevice working: 2 devices
+2025-11-03 19:15:34.467 | INFO     |   • Built-in Output [DEFAULT]
+2025-11-03 19:15:34.473 | WARNING  | Could not restore UI state: unhashable type: 'dict'
+2025-11-03 19:15:34.475 | SUCCESS  | ✓ Profile loaded: Okti (0 references)
+2025-11-03 19:15:34.475 | SUCCESS  | Restored profile: Okti
+2025-11-03 19:15:36.485 | SUCCESS  | Settings saved
+2025-11-03 19:15:36.487 | SUCCESS  | UI state saved
+2025-11-03 19:15:36.488 | SUCCESS  | Session state saved
+2025-11-03 19:15:36.488 | INFO     | ✓ sounddevice working: 2 devices
+2025-11-03 19:15:36.489 | INFO     |   • Built-in Output [DEFAULT]

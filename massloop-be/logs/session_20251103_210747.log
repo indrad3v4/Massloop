@@ -1,0 +1,128 @@
+2025-11-03 21:07:47.040 | SUCCESS  | 📝 Logging enabled: logs/massloop_*.log, errors_*.log, and session log created
+2025-11-03 21:07:50.447 | INFO     | sounddevice imported successfully
+2025-11-03 21:07:50.449 | INFO     | ================================================================================
+2025-11-03 21:07:50.450 | INFO     | 🎸 MASSLOOP.AI - Live Music Generation Instrument
+2025-11-03 21:07:50.450 | INFO     | ================================================================================
+2025-11-03 21:07:50.451 | INFO     | Loading persistent state...
+2025-11-03 21:07:50.452 | SUCCESS  | Settings loaded: data/config/settings.json
+2025-11-03 21:07:50.453 | SUCCESS  | UI state loaded: data/config/ui_state.json
+2025-11-03 21:07:50.453 | SUCCESS  | Session state loaded: data/config/session_state.json
+2025-11-03 21:07:50.454 | INFO     | StateManager initialized: data
+2025-11-03 21:07:50.454 | SUCCESS  | State manager loaded
+2025-11-03 21:07:50.454 | DEBUG    | Shutdown handlers registered
+2025-11-03 21:07:50.455 | INFO     | Initializing MassloopApp...
+2025-11-03 21:07:50.455 | INFO     | State manager initialized: StateManager
+2025-11-03 21:07:50.456 | INFO     | FileStorage initialized: data
+2025-11-03 21:07:50.457 | INFO     | ✓ sounddevice available - real device detection enabled
+2025-11-03 21:07:50.457 | SUCCESS  | ✅ Librosa analyzer initialized
+2025-11-03 21:07:50.458 | SUCCESS  | ✓ CometAPI Suno v5 initialized
+2025-11-03 21:07:50.458 | DEBUG    |   Base URL: https://api.cometapi.com
+2025-11-03 21:07:50.458 | SUCCESS  | 🤖 Orchestrator: DeepSeek V3 ready (reflection enabled)
+2025-11-03 21:07:50.459 | SUCCESS  | 💾 Budget restored from state: €6.00
+2025-11-03 21:07:50.460 | INFO     | LivePerformanceUseCase initialized
+2025-11-03 21:07:50.460 | INFO     |   Orchestrator: ✅
+2025-11-03 21:07:50.460 | INFO     |   Audio Analyzer: ✅
+2025-11-03 21:07:50.460 | INFO     |   Mixer: ❌
+2025-11-03 21:07:50.460 | SUCCESS  | 💾 AI params restored: quality=0.80, retries=3
+2025-11-03 21:07:50.461 | INFO     | ✓ DeckStateManager: Ready (initializes on performance start)
+2025-11-03 21:07:50.461 | INFO     | Massloop.ai TUI initialized with state persistence
+2025-11-03 21:07:50.461 | SUCCESS  | App initialized
+2025-11-03 21:07:50.462 | INFO     | 🚀 Starting async event loop...
+2025-11-03 21:07:50.462 | INFO     | ================================================================================
+2025-11-03 21:07:50.631 | INFO     | Audio initialized: 44100Hz, 2ch
+2025-11-03 21:07:50.633 | INFO     | ✓ sounddevice working: 2 devices
+2025-11-03 21:07:50.635 | INFO     |   • Built-in Output [DEFAULT]
+2025-11-03 21:07:50.646 | WARNING  | Could not restore UI state: unhashable type: 'dict'
+2025-11-03 21:07:50.647 | SUCCESS  | ✓ Profile loaded: Okti (0 references)
+2025-11-03 21:07:50.648 | SUCCESS  | Restored profile: Okti
+2025-11-03 21:07:52.668 | SUCCESS  | Settings saved
+2025-11-03 21:07:52.669 | SUCCESS  | UI state saved
+2025-11-03 21:07:52.670 | SUCCESS  | Session state saved
+2025-11-03 21:07:52.671 | INFO     | ✓ sounddevice working: 2 devices
+2025-11-03 21:07:52.673 | INFO     |   • Built-in Output [DEFAULT]
+2025-11-03 21:07:56.238 | SUCCESS  | Settings saved
+2025-11-03 21:07:56.239 | SUCCESS  | UI state saved
+2025-11-03 21:07:56.240 | SUCCESS  | Session state saved
+2025-11-03 21:08:41.124 | INFO     | Recording device: Built-in Microphone
+2025-11-03 21:08:51.281 | SUCCESS  | Voice recorded successfully
+2025-11-03 21:08:51.283 | SUCCESS  | Voice saved to: data/temp_recordings/voice_sample_20251103_210851.wav
+2025-11-03 21:09:04.953 | SUCCESS  | ✅ Voice saved: indradeva_voice
+2025-11-03 21:09:07.689 | INFO     | 🎤 PERSONA SETUP WORKFLOW: indradeva
+2025-11-03 21:09:07.690 | SUCCESS  | ✅ STEP 1 complete: Profile entity created
+2025-11-03 21:09:07.690 | INFO     | STEP 2/4: Generating initial track (chirp-auk)...
+2025-11-03 21:09:07.690 | INFO     | [track_1762200547690] 🎵 GENERATE START
+2025-11-03 21:09:07.691 | INFO     | [track_1762200547690] 🎵 Prompt: indradeva signature sound...
+2025-11-03 21:09:07.691 | INFO     | [track_1762200547690] 🏷️  Tags: None...
+2025-11-03 21:09:07.691 | INFO     | [track_1762200547690] 🎵 Mode: CUSTOMIZATION
+2025-11-03 21:09:07.691 | DEBUG    | [track_1762200547690] payload: {
+  "prompt": "indradeva signature sound",
+  "tags": "None",
+  "mv": "chirp-auk",
+  "title": "Track_1762200547"
+}...
+2025-11-03 21:09:07.691 | DEBUG    | [track_1762200547690] ✓ Payload valid JSON
+2025-11-03 21:09:07.691 | DEBUG    | [track_1762200547690] POST https://api.cometapi.com/suno/submit/music
+2025-11-03 21:09:13.976 | DEBUG    | [track_1762200547690] HTTP 200
+2025-11-03 21:09:13.976 | DEBUG    | [track_1762200547690] Content-Type: application/json
+2025-11-03 21:09:13.976 | SUCCESS  | [track_1762200547690] ✅ Task submitted: dfaef9fd-9563-4c71-98f6-4979cc10b160
+2025-11-03 21:09:13.977 | INFO     | ⏳ Polling dfaef9fd-9563-4c71-98f6-4979cc10b160 (max 240s)...
+2025-11-03 21:09:13.977 | DEBUG    | Task ID: dfaef9fd-9563-4c71-98f6-4979cc10b160 (36 chars)
+2025-11-03 21:09:13.977 | DEBUG    | Endpoint: https://api.cometapi.com/suno/get/music
+2025-11-03 21:09:13.977 | DEBUG    | [Attempt 1] GET https://api.cometapi.com/suno/get/music?ids=dfaef9fd-9563-4c71-98f6-4979cc10b160
+2025-11-03 21:09:14.490 | DEBUG    | HTTP 200
+2025-11-03 21:09:14.490 | ERROR    | ❌ JSON parse error (attempt 1)
+2025-11-03 21:09:14.490 | ERROR    |    Error: Expecting value at position 0
+2025-11-03 21:09:14.491 | ERROR    |    Status: 200
+2025-11-03 21:09:14.491 | ERROR    |    Content-Type: text/html; charset=utf-8
+2025-11-03 21:09:14.491 | ERROR    |    Response (first 300 chars):
+<!doctype html>
+<html lang="zh" class="light">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.c
+2025-11-03 21:09:14.491 | CRITICAL | ❌ CRITICAL: API returned HTML error page!
+2025-11-03 21:09:14.492 | CRITICAL |    Check: API key, endpoint URL, API status
+2025-11-03 21:09:14.492 | SUCCESS  | ✅ STEP 2 complete: Track generated (clip_id: mock-id-12345)
+2025-11-03 21:09:14.492 | INFO     | STEP 3/4: Creating Suno persona...
+2025-11-03 21:09:14.493 | INFO     | 🎤 Creating persona: indradeva
+2025-11-03 21:09:14.493 | DEBUG    |    Clip: mock-id-12345
+2025-11-03 21:09:14.493 | DEBUG    |    Description: indradeva
+2025-11-03 21:09:14.493 | DEBUG    | Payload: {
+  "root_clip_id": "mock-id-12345",
+  "name": "indradeva",
+  "description": "indradeva",
+  "clips": [
+    "mock-id-12345"
+  ],
+  "is_public": false
+}...
+2025-11-03 21:09:14.493 | DEBUG    | POST https://api.cometapi.com/suno/persona/create
+2025-11-03 21:09:16.327 | ERROR    | ❌ HTTP 400
+2025-11-03 21:09:16.327 | ERROR    |    {"code":"fail_to_fetch_task","message":"{\"error\":{\"message\":\"clip id can not found\",\"type\":\"comet_api_error\",\"param\":\"\",\"code\":\"clip_id_error\"}}","data":null}
+2025-11-03 21:09:16.328 | ERROR    | ❌ STEP 3 failed: Could not create persona
+2025-11-03 21:09:16.331 | DEBUG    | Profile saved with 20 fields: data/profiles/indradeva.json
+2025-11-03 21:09:16.331 | SUCCESS  | ✓ Profile saved: data/profiles/indradeva.json
+2025-11-03 21:09:16.840 | SUCCESS  | Settings saved
+2025-11-03 21:09:16.841 | SUCCESS  | UI state saved
+2025-11-03 21:09:16.842 | SUCCESS  | Session state saved
+2025-11-03 21:09:16.842 | SUCCESS  | Profile 'indradeva' saved and set as active
+2025-11-03 21:15:25.429 | SUCCESS  | Settings saved
+2025-11-03 21:15:25.436 | SUCCESS  | UI state saved
+2025-11-03 21:15:25.437 | SUCCESS  | Session state saved
+2025-11-03 21:15:25.441 | INFO     | ✓ sounddevice working: 2 devices
+2025-11-03 21:15:25.442 | INFO     |   • Built-in Output [DEFAULT]
+2025-11-03 21:15:28.848 | SUCCESS  | Settings saved
+2025-11-03 21:15:28.849 | SUCCESS  | UI state saved
+2025-11-03 21:15:28.849 | SUCCESS  | Session state saved
+2025-11-03 21:15:28.850 | SUCCESS  | Settings saved
+2025-11-03 21:15:28.850 | SUCCESS  | UI state saved
+2025-11-03 21:15:28.851 | SUCCESS  | Session state saved
+2025-11-03 21:15:28.851 | SUCCESS  | Application state saved successfully
+2025-11-03 21:15:29.863 | INFO     | ================================================================================
+2025-11-03 21:15:29.864 | INFO     | 🏁 Massloop.ai session ended
+2025-11-03 21:15:29.864 | INFO     | ================================================================================
