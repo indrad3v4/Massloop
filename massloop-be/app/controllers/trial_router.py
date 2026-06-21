@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import time
 import uuid
+import json
 import os
 from pathlib import Path
 from app.controllers.performance_router import _load_queue, _save_queue, _run_approved_generation
