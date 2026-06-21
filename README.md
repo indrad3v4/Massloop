@@ -1,109 +1,117 @@
 # 🎛️ massloop.run
 
-**Ты — диджей. Ты — перформер. Ты артист, который не хочет тратить время на меню.**
+**AI-powered DJ orchestration.** Generate, mix, and deploy live-performance tracks — **free trial, then pay-as-you-go**.
 
-Это твой бесшовный генератор живых сетов. Ты выбираешь venue, BPM, energy → твои AI-агенты договариваются между собой → Suno генерирует трек за 3 секунды → ты одобряешь или дропаешь → готовый MP3 в колонках.
-
-Никаких подписок. Никаких лишних шагов. Ты на сцене — инструмент работает.
-
----
-
-## 💰 Твои деньги, твой формат
-
-| Что | Что ты получаешь |
-|-----|-----------------|
-| 🆓 **Free Trial** | 2 трека, 1 микс — **бесплатно**, без карты |
-| ⚡ **PAYG** | Покупаешь пакеты треков. Сколько взял — столько потратил. **Никаких подписок.** |
-
-> Подписки умерли. Ни €9/мес, ни €29/мес. Просто заправился и поехал.
+[![Python](https://img.shields.io/badge/Python-3.13-blue)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)](https://fastapi.tiangolo.com)
+[![Reflex](https://img.shields.io/badge/Reflex-0.6-purple)](https://reflex.dev)
+[![Railway](https://img.shields.io/badge/Railway-deployed-black)](https://railway.app)
+[![MOA](https://img.shields.io/badge/MOA-Mixture%20of%20Agents-orange)](#-ai-orchestrator)
 
 ---
 
-## 🧠 Твои AI-агенты
+## TL;DR
 
-Mixture of Agents — несколько LLM-агентов спорят, договариваются и синтезируют трек **под твой сет**:
-
-| Агент | Его работа для тебя |
-|-------|---------------------|
-| 🎯 **Director** | Выбирает структуру трека + стиль под venue |
-| 🎛️ **Mixer** | Решает BPM, energy flow, переходы |
-| ✍️ **Lyricist** | Пишет текст под жанр (если нужно) |
-| ✅ **Critic** | Оценивает результат — пускать в HITL или перегенерировать |
-
-**Ты** получаешь финальный превью и нажимаешь **Approve / Reject**.  
-Без твоего одобрения — трек не уходит в продакшен.
-
-**Синтез:** CometAPI → Suno v4/v5 (`chirp-v4`, `chirp-auk`, `chirp-crow`).  
-**Себестоимость:** ~$0.08–0.15/трек.
+🎵 You pick **venue**, **BPM**, **energy** → AI agents negotiate (Mixture of Agents) → **Suno** generates the track → you **approve or drop** it (Human-in-the-Loop) → ready MP3.
 
 ---
 
-## 🏗️ Твой стек
+## 💰 Pricing
+
+| Stage | What you get |
+|-------|-------------|
+| 🆓 **Free Trial** | 2 tracks, 1 mix — **free**, no card |
+| ⚡ **PAYG** | Buy track packs. Take what you need, spend what you use. **No subscriptions.** |
+
+> **Subscriptions are dead.** No €9/mo, no €29/mo. Just **fuel up and go.**
+
+---
+
+## 🧠 AI Orchestrator (MOA)
+
+**Mixture of Agents** — multiple LLM agents argue, negotiate, and synthesize a track:
+
+| Agent | Role |
+|-------|------|
+| 🎯 **Director** | Picks track structure + style for the venue |
+| 🎛️ **Mixer** | Decides BPM, energy flow, transitions |
+| ✍️ **Lyricist** | Writes genre-matching lyrics (when needed) |
+| ✅ **Critic** | Scores the result — send to HITL or regenerate |
+
+👉 **You** get the final preview and hit **Approve / Reject**.  
+Without your approval, the track never reaches production.
+
+**Synthesis:** CometAPI → Suno v4/v5 (`chirp-v4`, `chirp-auk`, `chirp-crow`).  
+**Cost:** ~$0.08–0.15/track.
+
+---
+
+## 🏗️ Architecture
 
 ```
 massloop.run
   │
-  ├── 🖥️ massloop-fe        Твой интерфейс (Reflex)
+  ├── 🖥️ massloop-fe        Reflex frontend (Python)
   │     ├── pages/           mix_trial, stage, health
   │     ├── components/      UI kit (Radix-themed)
-  │     └── state.py         Твой стейт
+  │     └── state.py         Frontend state
   │
-  ├── ⚙️  massloop-be        Твой бэкенд (FastAPI)
-  │     ├── controllers/     endpoints + HITL
-  │     ├── services/        CometAPI/Suno adapter
+  ├── ⚙️  massloop-be        FastAPI backend
+  │     ├── controllers/     REST endpoints + HITL queue
+  │     ├── services/        CometAPI/Suno adapter, state machine
   │     ├── orchestrator/    OpenAI Agents SDK + MOA pipeline
   │     └── main.py          CORS, routers, middleware
   │
-  └── ☁️  Railway            Твой деплой
+  └── ☁️  Railway            Deployment (BE + FE, single-port)
 ```
 
 ---
 
-## 🔌 Твои endpoints
+## 🔌 API
 
-| Endpoint | Что тебе даёт |
-|----------|--------------|
-| `GET /api/health` | Проверка: жив? ✅ |
-| `POST /api/performance/queue` | Создать заявку на трек (pending) |
-| `POST /api/performance/approve/{id}` | Ты аппрувнул → Suno генерит |
-| `GET /api/performance/status/{id}` | Статус генерации |
-| `GET /api/performance/result/{id}` | Скачать MP3 / ошибка |
-| `POST /api/trial/start` | Запустить триал (2 трека) |
-| `GET /api/trial/result/{id}` | Результат триала |
-| `POST /api/payg/purchase` | Купить пакет треков (PAYG) |
-| `POST /api/stripe/webhook` | Подтверждение оплаты |
+| Endpoint | What it does |
+|----------|-------------|
+| `GET /health` | Health check ✅ |
+| `POST /api/performance/queue` | Create a track request (pending) |
+| `POST /api/performance/approve/{id}` | Human approves → Suno generates |
+| `GET /api/performance/status/{id}` | Generation status |
+| `GET /api/performance/result/{id}` | Download MP3 / error |
+| `POST /api/trial/start` | Start trial (2 tracks) |
+| `GET /api/trial/result/{id}` | Trial result |
+| `POST /api/stripe/checkout` | Stripe Checkout session |
+| `POST /api/stripe/webhook` | Payment confirmation |
 
 ---
 
 ## 🚀 Railway Deploy
 
-| Service | Root | Start |
-|---------|------|-------|
+| Service | Root | Start command |
+|---------|------|---------------|
 | **massloop-be** | `massloop-be/` | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
 | **massloop-fe** | `massloop-fe/` | `reflex run --env prod --single-port --frontend-port $PORT` |
 
 **DNS:**
-- 🌐 `massloop.run` → твой фронтенд
-- 🔗 `api.massloop.run` → твой бэкенд
+- 🌐 `massloop.run` → massloop-fe
+- 🔗 `api.massloop.run` → massloop-be
 
 ---
 
-## 🛠️ Твоя локальная разработка (за 5 минут)
+## 🛠️ Local Dev (5 minutes)
 
-### Предварительно
+### Prerequisites
 
 ```bash
 # Python 3.13 + uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Ключи в .env (или в ~/.bashrc):
+# Keys in .env (or export in shell):
 export COMETAPI_KEY="sk-..."
 export SUNO_API_KEY="..."
 export STRIPE_SECRET_KEY="sk_test_..."
 export OPENAI_API_KEY="sk-..."
 ```
 
-### Бэкенд
+### Backend
 
 ```bash
 cd massloop-be
@@ -112,7 +120,7 @@ uv pip sync requirements.txt
 uvicorn app.main:app --port 8000 --reload
 ```
 
-### Фронтенд
+### Frontend
 
 ```bash
 cd massloop-fe
