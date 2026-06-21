@@ -17,7 +17,7 @@ def health_check() -> rx.Component:
                 rx.text("status check for massloop backend & orchestrator",
                         color=SLATE, font_size="0.8rem"),
                 padding="2rem 0",
-                spacing="0.25rem",
+                spacing="1",
                 align_items="center",
             ),
 
@@ -27,7 +27,7 @@ def health_check() -> rx.Component:
                     rx.hstack(
                         rx.text("$ backend", font_size="0.9rem", color=WHITE, font_weight="600"),
                         status_dot(MassloopState.backend_ok),
-                        spacing="0.5rem",
+                        spacing="2",
                     ),
                     rx.text(MassloopState.backend_status, font_size="0.85rem", color=SLATE,
                             padding_left="1.5rem"),
@@ -35,7 +35,7 @@ def health_check() -> rx.Component:
                     rx.hstack(
                         rx.text("$ queue", font_size="0.9rem", color=WHITE, font_weight="600"),
                         status_dot(True),
-                        spacing="0.5rem",
+                        spacing="2",
                         margin_top="1rem",
                     ),
                     rx.cond(
@@ -49,7 +49,7 @@ def health_check() -> rx.Component:
                     rx.hstack(
                         rx.text("$ orchestrator", font_size="0.9rem", color=WHITE, font_weight="600"),
                         status_dot(True),
-                        spacing="0.5rem",
+                        spacing="2",
                         margin_top="1rem",
                     ),
                     rx.text("gpt-4o-mini · cometsuno adapter · chirp-v4",
@@ -70,10 +70,10 @@ def health_check() -> rx.Component:
                                  color=AMBER,
                                  background_color="transparent",
                                  _hover={"border_color": AMBER, "color": BLACK, "background_color": AMBER}),
-                        spacing="1rem",
+                        spacing="4",
                     ),
 
-                    spacing="0.5rem",
+                    spacing="2",
                     align_items="start",
                 ),
                 width="90%",

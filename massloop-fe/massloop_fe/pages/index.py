@@ -22,7 +22,7 @@ def index() -> rx.Component:
                         color=SLATE, font_size="0.85rem", margin_top="0.25rem"),
                 rx.text("> AI-powered live generation for underground electronic music",
                         color=f"{SLATE}aa", font_size="0.75rem"),
-                spacing="0.25rem",
+                spacing="4"
                 align_items="center",
                 padding="2rem 0",
             ),
@@ -32,10 +32,10 @@ def index() -> rx.Component:
                 rx.vstack(
                     # Status row
                     rx.hstack(
-                        rx.hstack(status_dot(True), rx.text(" orchestrator", font_size="0.85rem"), spacing="0.5rem"),
+                        rx.hstack(status_dot(True), rx.text(" orchestrator", font_size="0.85rem"), spacing="2"),
                         rx.hstack(status_dot(MassloopState.backend_ok),
                                   rx.text(MassloopState.backend_status, font_size="0.8rem", color=SLATE),
-                                  spacing="0.5rem"),
+                                  spacing="2"),
                         rx.spacer(),
                         rx.button("> refresh", on_click=MassloopState.check_health,
                                  variant="outline",
@@ -87,7 +87,7 @@ def index() -> rx.Component:
                                 rx.button("+", on_click=rx.set_value("bpm_display", min(200, rx.State.get().bpm + 5)),
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="0.8rem", padding="0.1rem 0.5rem"),
-                                spacing="0.5rem",
+                                spacing="2",
                                 align_items="center",
                             ),
                             align_items="center",

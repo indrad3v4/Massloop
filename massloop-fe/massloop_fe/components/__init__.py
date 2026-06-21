@@ -73,7 +73,7 @@ def buffer_bar(count: int, total: int = 3) -> rx.Component:
                 border_radius="1px",
             )
         )
-    return rx.hstack(*bars, spacing="4px", align_items="center")
+    return rx.hstack(*bars, spacing="1", align_items="center")
 
 def energy_gradient(value: float) -> rx.Component:
     pct = max(1, min(100, int(value * 100)))
@@ -107,7 +107,7 @@ def nav_bar() -> rx.Component:
             rx.text("massloop", font_weight="700", color=GREEN, font_size="1.2rem", letter_spacing="0.1em"),
             rx.text("·", color=PINK),
             rx.text("stage", color=SLATE, font_size="0.9rem"),
-            spacing="0.5rem",
+            spacing="2",
         ),
         rx.spacer(),
         rx.link("stage", href="/", color=SLATE, _hover={"color": GREEN}, font_size="0.85rem"),

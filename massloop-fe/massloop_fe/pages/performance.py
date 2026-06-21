@@ -18,7 +18,7 @@ def performance_page() -> rx.Component:
                 rx.text("stage monitor · buffer manager · generation control",
                         color=SLATE, font_size="0.8rem"),
                 padding="2rem 0",
-                spacing="0.25rem",
+                spacing="1",
                 align_items="center",
             ),
 
@@ -30,7 +30,7 @@ def performance_page() -> rx.Component:
                         rx.hstack(
                             status_dot(True),
                             rx.text("LIVE", font_size="0.9rem", color=GREEN, font_weight="700"),
-                            spacing="0.5rem",
+                            spacing="2",
                         ),
                         rx.spacer(),
                         rx.text("140 BPM · ACID TECHNO", color=PINK, font_size="0.8rem",
@@ -47,7 +47,7 @@ def performance_page() -> rx.Component:
                             rx.hstack(
                                 buffer_bar(2, 3),
                                 rx.text("2/3", color=GREEN, font_size="0.9rem"),
-                                spacing="0.75rem",
+                                spacing="3",
                             ),
                             rx.text("auto-fill: active · 1 generating",
                                     color=f"{GREEN}88", font_size="0.7rem"),
@@ -79,7 +79,7 @@ def performance_page() -> rx.Component:
                                 rx.button("+E", on_click=rx.set_value("energy_val", min(1.0, rx.State.get().energy + 0.1)),
                                          variant="outline", border=f"1px solid {AMBER}44",
                                          color=AMBER, font_size="0.75rem"),
-                                spacing="0.5rem",
+                                spacing="2",
                             ),
                             align_items="center",
                         ),
@@ -97,7 +97,7 @@ def performance_page() -> rx.Component:
                                 rx.button("+B", on_click=rx.set_value("bpm_val", min(200, rx.State.get().bpm + 5)),
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="0.75rem"),
-                                spacing="0.5rem",
+                                spacing="2",
                             ),
                             align_items="center",
                         ),
@@ -149,7 +149,7 @@ def performance_page() -> rx.Component:
                                         MassloopState.last_generated_status == "submitted",
                                         AMBER, SLATE
                                     )),
-                            spacing="1rem",
+                            spacing="4",
                         ),
                         align_items="start",
                     ),
