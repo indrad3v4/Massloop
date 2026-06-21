@@ -1,2 +1,2 @@
 [phases.setup]
-nixPkgs = ["unzip"]
+nixPkgs = ["python3", "unzip"]
