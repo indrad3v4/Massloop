@@ -1,44 +1,36 @@
 # 🎛️ massloop.run
 
-**AI-powered DJ orchestration.** Generate, mix, and deploy live-performance tracks — **free trial, then pay-as-you-go**.
+**You are the DJ. You are the performer. You are the artist who doesn't want to waste time on menus.**
 
-[![Python](https://img.shields.io/badge/Python-3.13-blue)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)](https://fastapi.tiangolo.com)
-[![Reflex](https://img.shields.io/badge/Reflex-0.6-purple)](https://reflex.dev)
-[![Railway](https://img.shields.io/badge/Railway-deployed-black)](https://railway.app)
-[![MOA](https://img.shields.io/badge/MOA-Mixture%20of%20Agents-orange)](#-ai-orchestrator)
+This is your seamless live-set generator. You pick venue, BPM, energy → your AI agents negotiate → Suno generates a track in seconds → you approve or drop it → ready MP3 hits the speakers.
+
+No subscriptions. No extra steps. You are on stage — the tool works.
 
 ---
 
-## TL;DR
+## 💰 Your money, your format
 
-🎵 You pick **venue**, **BPM**, **energy** → AI agents negotiate (Mixture of Agents) → **Suno** generates the track → you **approve or drop** it (Human-in-the-Loop) → ready MP3.
-
----
-
-## 💰 Pricing
-
-| Stage | What you get |
-|-------|-------------|
+| What | What you get |
+|------|-------------|
 | 🆓 **Free Trial** | 2 tracks, 1 mix — **free**, no card |
 | ⚡ **PAYG** | Buy track packs. Take what you need, spend what you use. **No subscriptions.** |
 
-> **Subscriptions are dead.** No €9/mo, no €29/mo. Just **fuel up and go.**
+> Subscriptions are dead. No €9/mo, no €29/mo. Just fuel up and go.
 
 ---
 
-## 🧠 AI Orchestrator (MOA)
+## 🧠 Your AI agents
 
-**Mixture of Agents** — multiple LLM agents argue, negotiate, and synthesize a track:
+**Mixture of Agents** — several LLM agents argue, negotiate, and synthesize a track **for your set**:
 
-| Agent | Role |
-|-------|------|
+| Agent | What it does for you |
+|-------|---------------------|
 | 🎯 **Director** | Picks track structure + style for the venue |
 | 🎛️ **Mixer** | Decides BPM, energy flow, transitions |
 | ✍️ **Lyricist** | Writes genre-matching lyrics (when needed) |
 | ✅ **Critic** | Scores the result — send to HITL or regenerate |
 
-👉 **You** get the final preview and hit **Approve / Reject**.  
+**You** get the final preview and hit **Approve / Reject**.  
 Without your approval, the track never reaches production.
 
 **Synthesis:** CometAPI → Suno v4/v5 (`chirp-v4`, `chirp-auk`, `chirp-crow`).  
@@ -46,57 +38,57 @@ Without your approval, the track never reaches production.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Your stack
 
 ```
 massloop.run
   │
-  ├── 🖥️ massloop-fe        Reflex frontend (Python)
+  ├── 🖥️ massloop-fe        Your interface (Reflex)
   │     ├── pages/           mix_trial, stage, health
   │     ├── components/      UI kit (Radix-themed)
-  │     └── state.py         Frontend state
+  │     └── state.py         Your state
   │
-  ├── ⚙️  massloop-be        FastAPI backend
-  │     ├── controllers/     REST endpoints + HITL queue
-  │     ├── services/        CometAPI/Suno adapter, state machine
+  ├── ⚙️  massloop-be        Your backend (FastAPI)
+  │     ├── controllers/     endpoints + HITL
+  │     ├── services/        CometAPI/Suno adapter
   │     ├── orchestrator/    OpenAI Agents SDK + MOA pipeline
   │     └── main.py          CORS, routers, middleware
   │
-  └── ☁️  Railway            Deployment (BE + FE, single-port)
+  └── ☁️  Railway            Your deployment
 ```
 
 ---
 
-## 🔌 API
+## 🔌 Your endpoints
 
-| Endpoint | What it does |
-|----------|-------------|
-| `GET /health` | Health check ✅ |
+| Endpoint | What it gives you |
+|----------|------------------|
+| `GET /api/health` | Check: alive? ✅ |
 | `POST /api/performance/queue` | Create a track request (pending) |
-| `POST /api/performance/approve/{id}` | Human approves → Suno generates |
+| `POST /api/performance/approve/{id}` | You approve → Suno generates |
 | `GET /api/performance/status/{id}` | Generation status |
 | `GET /api/performance/result/{id}` | Download MP3 / error |
 | `POST /api/trial/start` | Start trial (2 tracks) |
 | `GET /api/trial/result/{id}` | Trial result |
-| `POST /api/stripe/checkout` | Stripe Checkout session |
+| `POST /api/payg/purchase` | Buy a track pack (PAYG) |
 | `POST /api/stripe/webhook` | Payment confirmation |
 
 ---
 
 ## 🚀 Railway Deploy
 
-| Service | Root | Start command |
-|---------|------|---------------|
+| Service | Root | Start |
+|---------|------|-------|
 | **massloop-be** | `massloop-be/` | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
 | **massloop-fe** | `massloop-fe/` | `reflex run --env prod --single-port --frontend-port $PORT` |
 
 **DNS:**
-- 🌐 `massloop.run` → massloop-fe
-- 🔗 `api.massloop.run` → massloop-be
+- 🌐 `massloop.run` → your frontend
+- 🔗 `api.massloop.run` → your backend
 
 ---
 
-## 🛠️ Local Dev (5 minutes)
+## 🛠️ Your local dev (5 minutes)
 
 ### Prerequisites
 
@@ -104,7 +96,7 @@ massloop.run
 # Python 3.13 + uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Keys in .env (or export in shell):
+# Keys in .env (or in ~/.bashrc):
 export COMETAPI_KEY="sk-..."
 export SUNO_API_KEY="..."
 export STRIPE_SECRET_KEY="sk_test_..."
