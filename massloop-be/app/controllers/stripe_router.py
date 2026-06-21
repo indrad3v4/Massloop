@@ -6,16 +6,19 @@ import stripe
 import json
 from pathlib import Path
 
+from app.config import settings
+
 router = APIRouter(prefix="/api/stripe", tags=["stripe"])
 
 # Config
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
 WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
-# Price IDs (set in Railway env)
 PRICE_DJ_STARTER = os.getenv("STRIPE_PRICE_DJ_STARTER", "price_dj_starter")
 PRICE_PRO = os.getenv("STRIPE_PRICE_PRO", "price_pro")
 
-TRIAL_FILE = Path("/Users/indradev_work/Downloads/MassLoopai/massloop-be/data/trials.json")
+# Production-safe: resolves relative to repo root or uses env var
+_DATA_DIR = Path(__file__).parent.parent.parent / "data"
+TRIAL_FILE = Path(os.getenv("MASSLOOP_DATA_DIR", str(_DATA_DIR))) / "trials.json"
 
 
 class CheckoutRequest(BaseModel):

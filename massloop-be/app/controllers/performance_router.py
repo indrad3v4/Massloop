@@ -2,6 +2,7 @@
 import json
 import time
 import uuid
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -26,7 +27,9 @@ def set_orchestrator(orch):
     global _orchestrator
     _orchestrator = orch
 
-QUEUE_FILE = Path("/Users/indradev_work/Downloads/MassLoopai/massloop-be/data/queue.json")
+# Production-safe: resolves relative to the repo root or uses env var
+_DATA_DIR = Path(__file__).parent.parent.parent / "data"
+QUEUE_FILE = Path(os.getenv("MASSLOOP_DATA_DIR", str(_DATA_DIR))) / "queue.json"
 
 
 class QueueRequest(BaseModel):
@@ -261,3 +264,53 @@ def get_queue_result(task_id: str):
 def list_queue():
     """List all queued tasks."""
     return {"queue": _load_queue()}
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COMMIT AUTO-FLOW (replaces HITL approve pattern)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@router.post("/commit")
+async def auto_commit(background_tasks: BackgroundTasks):
+    """Auto-commit next generation: creates a task and fires it immediately."""
+    req = QueueRequest()
+    task_id = str(uuid.uuid4())
+    task = {
+        "id": task_id,
+        "status": "committed",
+        "created_at": time.time(),
+        "approved_at": None,
+        "approved_by": "auto-commit",
+        "started_at": time.time(),
+        "completed_at": None,
+        "params": req.model_dump(),
+        "result": None,
+        "error": None,
+    }
+    queue = _load_queue()
+    queue.append(task)
+    _save_queue(queue)
+    background_tasks.add_task(_run_approved_generation, task_id)
+    return {
+        "status": "committed",
+        "id": task_id,
+        "message": "Generation auto-triggered (commit flow)",
+    }
+
+
+@router.get("/buffer_health")
+def buffer_health():
+    """Stage buffer status — for monitor and hardware LEDs."""
+    queue = _load_queue()
+    ready = [t for t in queue if t["status"] == "complete"]
+    generating = [t for t in queue if t["status"] == "generating"]
+    pending = [t for t in queue if t["status"] in ("pending_approval", "committed")]
+    buffer_tracks = len(ready)
+    return {
+        "buffer_tracks": buffer_tracks,
+        "generating": len(generating),
+        "pending": len(pending),
+        "healthy": buffer_tracks >= 2,
+        "status": "healthy" if buffer_tracks >= 2 else "critical" if buffer_tracks == 0 else "degraded",
+        "warning": None if buffer_tracks >= 2 else "low buffer",
+    }

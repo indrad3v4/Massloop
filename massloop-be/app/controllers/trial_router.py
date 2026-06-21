@@ -3,12 +3,15 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import time
 import uuid
+import os
 from pathlib import Path
 from app.controllers.performance_router import _load_queue, _save_queue, _run_approved_generation
 
 router = APIRouter(prefix="/api/trial", tags=["trial"])
 
-TRIAL_LIMIT_FILE = Path("/Users/indradev_work/Downloads/MassLoopai/massloop-be/data/trial_limits.json")
+# Production-safe: resolves relative to repo root or uses env var
+_DATA_DIR = Path(__file__).parent.parent.parent / "data"
+TRIAL_LIMIT_FILE = Path(os.getenv("MASSLOOP_DATA_DIR", str(_DATA_DIR))) / "trial_limits.json"
 
 
 class TrialRequest(BaseModel):

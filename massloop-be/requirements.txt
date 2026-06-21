@@ -6,3 +6,4 @@ httpx
 loguru
 openai
 openai-agents
+stripe

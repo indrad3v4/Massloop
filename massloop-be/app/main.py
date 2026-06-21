@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.controllers.performance_router import router as performance_router
+from app.controllers.performance_router import router as performance_router, set_orchestrator
 from app.controllers.profile_router import router as profile_router
 from app.controllers.stripe_router import router as stripe_router
 from app.controllers.trial_router import router as trial_router
@@ -24,7 +24,7 @@ app.add_middleware(
 orchestrator = None
 if __import__("os").getenv("OPENAI_API_KEY"):
     orchestrator = MusicOrchestratorAgent()
-    performance_router.orchestrator = orchestrator
+    set_orchestrator(orchestrator)
 
 app.include_router(performance_router)
 app.include_router(profile_router)
