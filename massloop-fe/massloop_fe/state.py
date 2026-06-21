@@ -136,10 +136,10 @@ class MassloopState(rx.State):
     def set_venue(self, value: str):
         self.venue = value
 
-    def set_bpm(self, value: str):
+    def set_bpm(self, value: list[float]):
         try:
-            self.bpm = int(value)
-        except ValueError:
+            self.bpm = int(value[0]) if value else self.bpm
+        except (ValueError, IndexError):
             pass
 
     def set_energy(self, value: str):
