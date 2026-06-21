@@ -2,4 +2,4 @@
     builder = "nixpacks"
 
 [deploy]
-    startCommand = "reflex run --env prod --backend-port $PORT"
+    startCommand = "reflex run --env prod --single-port --frontend-port $PORT"
