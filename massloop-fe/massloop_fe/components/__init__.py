@@ -92,13 +92,13 @@ def energy_gradient(value: float) -> rx.Component:
         overflow="hidden",
     )
 
-def status_dot(ok: bool) -> rx.Component:
+def status_dot(ok) -> rx.Component:
     return rx.box(
         width="8px",
         height="8px",
         border_radius="50%",
-        background_color=GREEN if ok else RED,
-        box_shadow=f"0 0 6px {GREEN if ok else RED}",
+        background_color=rx.cond(ok, GREEN, RED),
+        box_shadow=rx.cond(ok, f"0 0 6px {GREEN}", f"0 0 6px {RED}"),
     )
 
 def nav_bar() -> rx.Component:

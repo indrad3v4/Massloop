@@ -1,113 +1,133 @@
-# 🎛️ Massloop
+# 🎛️ massloop.run
 
-**AI-powered DJ orchestration platform.** Generate, mix, and deploy live-performance tracks via CometAPI Suno, gated by a human-in-the-loop approval queue and Stripe billing.
+**AI-powered DJ orchestration.** Generate, mix, and deploy live-performance tracks — **free trial, then pay-as-you-go**.
 
-![Python](https://img.shields.io/badge/Python-3.13-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
-![Reflex](https://img.shields.io/badge/Reflex-0.6-purple)
-![Railway](https://img.shields.io/badge/Railway-deployed-black)
-
----
-
-## 🔥 What it does
-
-| Endpoint | Action |
-|----------|--------|
-| `POST /api/performance/queue` | Draft a track request (`pending_approval`) |
-| `POST /api/performance/approve/{id}` | Human approves → auto-generates via Suno |
-| `GET /api/performance/status/{id}` | Poll state |
-| `GET /api/performance/result/{id}` | Get final MP3 or error |
-| `POST /api/trial/start` | Free 2-track mix trial |
-| `GET /api/trial/result/{id}` | Retrieve trial audio |
-| `POST /api/stripe/checkout` | Stripe subscription (`DJ Starter` €9/mo) |
-| `POST /api/stripe/webhook` | Payment verification |
-
-### Pricing
-
-| Tier | Price | Tracks | Mixes/mo |
-|------|-------|--------|----------|
-| Trial | €0 | 2 | 1 |
-| DJ Starter | €9 | 20 | 10 |
-| Pro | €29 | ∞ | ∞ |
+[![Python](https://img.shields.io/badge/Python-3.13-blue)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)](https://fastapi.tiangolo.com)
+[![Reflex](https://img.shields.io/badge/Reflex-0.6-purple)](https://reflex.dev)
+[![Railway](https://img.shields.io/badge/Railway-deployed-black)](https://railway.app)
+[![MOA](https://img.shields.io/badge/MOA-Mixture%20of%20Agents-orange)](#-ai-orchestrator)
 
 ---
 
-## 🏗️ Structure
+## TL;DR
 
-```
-Massloopai/
-├── massloop-be/           # FastAPI backend
-│   ├── app/
-│   │   ├── controllers/   # REST routers + HITL queue
-│   │   ├── services/      # CometAPI Suno adapter, state manager
-│   │   ├── orchestrator/  # OpenAI Agents SDK
-│   │   └── main.py        # CORS + router mount
-│   └── railway.toml       # uvicorn start command
-├── massloop-fe/           # Reflex frontend
-│   ├── massloop_fe/
-│   │   ├── pages/
-│   │   │   ├── mix_trial_page.py   # DJ workflow UI
-│   │   │   └── health.py
-│   │   └── state.py       # Trial + Stripe state
-│   └── railway.toml       # reflex prod start command
-└── data/                  # Queue + trial limits (gitignored)
-```
+🎵 Выбираешь **venue**, **BPM**, **energy** → AI-агенты договариваются (Mixture of Agents) → **Suno** генерирует трек → ты **одобряешь или дропаешь** (Human-in-the-Loop) → готовый MP3.
 
 ---
 
-## 🚀 Deploy
+## 💰 Pricing
 
-### Railway (production)
+| Этап | Что получаешь |
+|------|--------------|
+| 🆓 **Free Trial** | 2 трека, 1 микс — **бесплатно**, без карты |
+| ⚡ **PAYG** | Покупаешь пакеты треков. Сколько взял — столько потратил. **Никаких подписок.** |
 
-| Service | Root directory | Start command |
-|---------|---------------|---------------|
-| `massloop-be` | `massloop-be` | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
-| `massloop-fe` | `massloop-fe` | `reflex run --env prod --backend-port $PORT` |
+> **Подписки умерли.** Ни €9/мес, ни €29/мес. Просто **заправился и поехал.**
 
-**Public URLs:**
-- BE: `https://massloop-be-production.up.railway.app`
-- FE: `https://massloop-fe-production.up.railway.app`
+---
 
-### DNS (Path A)
+## 🧠 AI Orchestrator (MOA)
+
+**Mixture of Agents** — несколько LLM-агентов спорят, договариваются и синтезируют трек:
+
+| Агент | Роль |
+|-------|------|
+| 🎯 **Director** | Выбирает структуру трека + стиль под venue |
+| 🎛️ **Mixer** | Решает BPM, energy flow, переходы |
+| ✍️ **Lyricist** | Пишет текст под жанр (если нужно) |
+| ✅ **Critic** | Оценивает результат — пускать в HITL или перегенерировать |
+
+👉 **Человек** получает финальный превью и нажимает **Approve / Reject**.  
+Без одобрения — трек не уходит в продакшен.
+
+**Синтез:** CometAPI → Suno v4/v5 (`chirp-v4`, `chirp-auk`, `chirp-crow`).  
+**Себестоимость:** ~$0.08–0.15/трек.
+
+---
+
+## 🏗️ Architecture
 
 ```
-massloop.run       CNAME → massloop-fe-production.up.railway.app
-api.massloop.run   CNAME → massloop-be-production.up.railway.app
+massloop.run
+  │
+  ├── 🖥️ massloop-fe        Reflex frontend (Python)
+  │     ├── pages/           mix_trial, health, dashboard
+  │     ├── components/      UI kit (Radix-themed)
+  │     └── state.py         Trial + PAYG state management
+  │
+  ├── ⚙️  massloop-be        FastAPI backend
+  │     ├── controllers/     REST endpoints + HITL queue
+  │     ├── services/        CometAPI/Suno adapter, state machine
+  │     ├── orchestrator/    OpenAI Agents SDK + MOA pipeline
+  │     └── main.py          CORS, routers, middleware
+  │
+  └── ☁️  Railway            Деплой (BE + FE, single-port)
 ```
 
 ---
 
-## 🧠 AI Orchestrator
+## 🔌 API
 
-Uses OpenAI Agents SDK to decide: *generate / continue / mix* based on venue, BPM, energy. Calls CometAPI Suno v4/v5 for actual synthesis.
-
-**Models:** `chirp-v4`, `chirp-auk` (lyrics), `chirp-crow` (v5, fastest)
-
-**Cost:** ~$0.08–0.15/track. $13 budget ≈ 87–162 tracks.
+| Endpoint | Что делает |
+|----------|-----------|
+| `GET /api/health` | Живой? ✅ |
+| `POST /api/performance/queue` | Создать заявку на трек (pending) |
+| `POST /api/performance/approve/{id}` | Человек аппрувнул → Suno генерит |
+| `GET /api/performance/status/{id}` | Статус генерации |
+| `GET /api/performance/result/{id}` | Скачать MP3 / ошибка |
+| `POST /api/trial/start` | Запустить триал (2 трека) |
+| `GET /api/trial/result/{id}` | Результат триала |
+| `POST /api/payg/purchase` | Купить пакет треков (PAYG) |
+| `POST /api/stripe/webhook` | Подтверждение оплаты |
 
 ---
 
-## 📋 Local dev
+## 🚀 Railway Deploy
+
+| Service | Root | Start |
+|---------|------|-------|
+| **massloop-be** | `massloop-be/` | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| **massloop-fe** | `massloop-fe/` | `reflex run --env prod --single-port --frontend-port $PORT` |
+
+**DNS:**
+- 🌐 `massloop.run` → massloop-fe
+- 🔗 `api.massloop.run` → massloop-be
+
+---
+
+## 🛠️ Local Dev (за 5 минут)
+
+### Предварительно
 
 ```bash
-# Backend
-cd massloop-be
-uv venv .venv --python 3.13
-uv pip install -r requirements.txt -p .venv/bin/python
-uvicorn app.main:app --port 8000
+# Python 3.13 + uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Frontend
-cd ../massloop-fe
-reflex run --env dev
+# Ключи в .env (или в ~/.bashrc):
+export COMETAPI_KEY="sk-..."
+export SUNO_API_KEY="..."
+export STRIPE_SECRET_KEY="sk_test_..."
+export OPENAI_API_KEY="sk-..."
 ```
 
-**Requirements:** Python 3.13, `uv`, `starlette==0.40.0` (FastAPI 0.115 compat)
+### Бэкенд
 
----
+```bash
+cd massloop-be
+uv venv
+uv pip sync requirements.txt
+uvicorn app.main:app --port 8000 --reload
+```
 
-## 🎨 Branding
+### Фронтенд
 
-Suckpuck aesthetic — dark, glitch-industrial, acid neons. Built with wabi-sabi precision.
+```bash
+cd massloop-fe
+uv venv
+uv pip sync requirements.txt
+reflex run --env dev
+```
 
 ---
 
