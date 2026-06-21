@@ -13,9 +13,9 @@ def health_check() -> rx.Component:
             nav_bar(),
 
             rx.vstack(
-                rx.text("> system/health", font_size="1.5rem", font_weight="700", color=GREEN),
+                rx.text("> system/health", font_size="6", font_weight="700", color=GREEN),
                 rx.text("status check for massloop backend & orchestrator",
-                        color=SLATE, font_size="0.8rem"),
+                        color=SLATE, font_size="2"),
                 padding="2rem 0",
                 spacing="1",
                 align_items="center",
@@ -25,35 +25,35 @@ def health_check() -> rx.Component:
             terminal_box(
                 rx.vstack(
                     rx.hstack(
-                        rx.text("$ backend", font_size="0.9rem", color=WHITE, font_weight="600"),
+                        rx.text("$ backend", font_size="3", color=WHITE, font_weight="600"),
                         status_dot(MassloopState.backend_ok),
                         spacing="2",
                     ),
-                    rx.text(MassloopState.backend_status, font_size="0.85rem", color=SLATE,
+                    rx.text(MassloopState.backend_status, font_size="2", color=SLATE,
                             padding_left="1.5rem"),
 
                     rx.hstack(
-                        rx.text("$ queue", font_size="0.9rem", color=WHITE, font_weight="600"),
+                        rx.text("$ queue", font_size="3", color=WHITE, font_weight="600"),
                         status_dot(True),
                         spacing="2",
                         margin_top="1rem",
                     ),
                     rx.cond(
                         MassloopState.queue_length >= 0,
-                        rx.text(f"items: {MassloopState.queue_length}", font_size="0.85rem", color=SLATE,
+                        rx.text(f"items: {MassloopState.queue_length}", font_size="2", color=SLATE,
                                 padding_left="1.5rem"),
-                        rx.text("queue: unreachable", font_size="0.85rem", color=RED,
+                        rx.text("queue: unreachable", font_size="2", color=RED,
                                 padding_left="1.5rem"),
                     ),
 
                     rx.hstack(
-                        rx.text("$ orchestrator", font_size="0.9rem", color=WHITE, font_weight="600"),
+                        rx.text("$ orchestrator", font_size="3", color=WHITE, font_weight="600"),
                         status_dot(True),
                         spacing="2",
                         margin_top="1rem",
                     ),
                     rx.text("gpt-4o-mini · cometsuno adapter · chirp-v4",
-                            font_size="0.85rem", color=SLATE, padding_left="1.5rem"),
+                            font_size="2", color=SLATE, padding_left="1.5rem"),
 
                     rx.divider(border_color=f"{GREEN}22", margin="1rem 0"),
 
@@ -82,7 +82,7 @@ def health_check() -> rx.Component:
 
             rx.spacer(),
             rx.hstack(
-                rx.text("press f5 to re-connect", color=GRAY, font_size="0.7rem"),
+                rx.text("press f5 to re-connect", color=GRAY, font_size="1"),
                 justify="center",
                 padding="2rem 0",
             ),

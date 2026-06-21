@@ -14,9 +14,9 @@ def performance_page() -> rx.Component:
             nav_bar(),
 
             rx.vstack(
-                rx.text("> live performance", font_size="1.5rem", font_weight="700", color=GREEN),
+                rx.text("> live performance", font_size="6", font_weight="700", color=GREEN),
                 rx.text("stage monitor · buffer manager · generation control",
-                        color=SLATE, font_size="0.8rem"),
+                        color=SLATE, font_size="2"),
                 padding="2rem 0",
                 spacing="1",
                 align_items="center",
@@ -29,11 +29,11 @@ def performance_page() -> rx.Component:
                     rx.hstack(
                         rx.hstack(
                             status_dot(True),
-                            rx.text("LIVE", font_size="0.9rem", color=GREEN, font_weight="700"),
+                            rx.text("LIVE", font_size="2", color=GREEN, font_weight="700"),
                             spacing="2",
                         ),
                         rx.spacer(),
-                        rx.text("140 BPM · ACID TECHNO", color=PINK, font_size="0.8rem",
+                        rx.text("140 BPM · ACID TECHNO", color=PINK, font_size="2",
                                 font_weight="600"),
                         width="100%",
                     ),
@@ -43,22 +43,22 @@ def performance_page() -> rx.Component:
                     # Buffer visualization
                     rx.hstack(
                         rx.vstack(
-                            rx.text("$ buffer", color=SLATE, font_size="0.75rem"),
+                            rx.text("$ buffer", color=SLATE, font_size="1"),
                             rx.hstack(
                                 buffer_bar(2, 3),
-                                rx.text("2/3", color=GREEN, font_size="0.9rem"),
+                                rx.text("2/3", color=GREEN, font_size="2"),
                                 spacing="3",
                             ),
                             rx.text("auto-fill: active · 1 generating",
-                                    color=f"{GREEN}88", font_size="0.7rem"),
+                                    color=f"{GREEN}88", font_size="1"),
                             align_items="start",
                         ),
                         rx.spacer(),
                         rx.vstack(
-                            rx.text("$ crowd", color=SLATE, font_size="0.75rem"),
+                            rx.text("$ crowd", color=SLATE, font_size="1"),
                             energy_gradient(0.7),
                             rx.text("crowd energy: 70% · tracking",
-                                    color=AMBER, font_size="0.7rem"),
+                                    color=AMBER, font_size="1"),
                             align_items="end",
                         ),
                         width="100%",
@@ -70,15 +70,15 @@ def performance_page() -> rx.Component:
                     rx.hstack(
                         # Energy controls
                         rx.vstack(
-                            rx.text("control", color=PINK, font_size="0.75rem", font_weight="600"),
+                            rx.text("control", color=PINK, font_size="1", font_weight="600"),
                             rx.hstack(
                                 rx.button("−E", on_click=rx.set_value("energy_val", max(0.1, rx.State.get().energy - 0.1)),
                                          variant="outline", border=f"1px solid {AMBER}44",
-                                         color=AMBER, font_size="0.75rem"),
+                                         color=AMBER, font_size="1"),
                                 rx.box(height="80px"),
                                 rx.button("+E", on_click=rx.set_value("energy_val", min(1.0, rx.State.get().energy + 0.1)),
                                          variant="outline", border=f"1px solid {AMBER}44",
-                                         color=AMBER, font_size="0.75rem"),
+                                         color=AMBER, font_size="1"),
                                 spacing="2",
                             ),
                             align_items="center",
@@ -88,15 +88,15 @@ def performance_page() -> rx.Component:
 
                         # BPM controls
                         rx.vstack(
-                            rx.text("tempo", color=PINK, font_size="0.75rem", font_weight="600"),
+                            rx.text("tempo", color=PINK, font_size="1", font_weight="600"),
                             rx.hstack(
                                 rx.button("−B", on_click=rx.set_value("bpm_val", max(80, rx.State.get().bpm - 5)),
                                          variant="outline", border=f"1px solid {GREEN}44",
-                                         color=GREEN, font_size="0.75rem"),
+                                         color=GREEN, font_size="1"),
                                 rx.box(height="80px"),
                                 rx.button("+B", on_click=rx.set_value("bpm_val", min(200, rx.State.get().bpm + 5)),
                                          variant="outline", border=f"1px solid {GREEN}44",
-                                         color=GREEN, font_size="0.75rem"),
+                                         color=GREEN, font_size="1"),
                                 spacing="2",
                             ),
                             align_items="center",
@@ -106,14 +106,14 @@ def performance_page() -> rx.Component:
 
                         # Big GENERATE button
                         rx.vstack(
-                            rx.text("trigger", color=PINK, font_size="0.75rem", font_weight="600"),
+                            rx.text("trigger", color=PINK, font_size="1", font_weight="600"),
                             rx.button(
                                 "▶ GENERATE NEXT",
                                 on_click=MassloopState.generate,
                                 background_color=GREEN,
                                 color=BLACK,
                                 font_weight="700",
-                                font_size="1.1rem",
+                                font_size="4",
                                 padding="0.75rem 1.5rem",
                                 border="none",
                                 border_radius="0",
@@ -140,11 +140,11 @@ def performance_page() -> rx.Component:
                 MassloopState.last_generated_id != "",
                 terminal_box(
                     rx.vstack(
-                        rx.text("$ history (last)", color=SLATE, font_size="0.75rem"),
+                        rx.text("$ history (last)", color=SLATE, font_size="1"),
                         rx.hstack(
-                            rx.text(f"id: {MassloopState.last_generated_id}", font_size="0.8rem", color=WHITE),
+                            rx.text(f"id: {MassloopState.last_generated_id}", font_size="2", color=WHITE),
                             rx.text(f"status: {MassloopState.last_generated_status}",
-                                    font_size="0.8rem",
+                                    font_size="2",
                                     color=rx.cond(
                                         MassloopState.last_generated_status == "submitted",
                                         AMBER, SLATE
@@ -162,9 +162,9 @@ def performance_page() -> rx.Component:
             # Hotkeys hint
             terminal_box(
                 rx.vstack(
-                    rx.text("$ hotkeys", color=SLATE, font_size="0.75rem"),
+                    rx.text("$ hotkeys", color=SLATE, font_size="1"),
                     rx.text("n: next track  ·  +/-: energy  ·  b: bump BPM  ·  space: play/pause",
-                            color=f"{WHITE}aa", font_size="0.75rem"),
+                            color=f"{WHITE}aa", font_size="1"),
                     align_items="start",
                 ),
                 width="90%",

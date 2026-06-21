@@ -104,17 +104,17 @@ def status_dot(ok: bool) -> rx.Component:
 def nav_bar() -> rx.Component:
     return rx.hstack(
         rx.hstack(
-            rx.text("massloop", font_weight="700", color=GREEN, font_size="1.2rem", letter_spacing="0.1em"),
+            rx.text("massloop", font_weight="700", color=GREEN, font_size="5"),
             rx.text("·", color=PINK),
-            rx.text("stage", color=SLATE, font_size="0.9rem"),
+            rx.text("stage", color=SLATE, font_size="3"),
             spacing="2",
         ),
         rx.spacer(),
-        rx.link("stage", href="/", color=SLATE, _hover={"color": GREEN}, font_size="0.85rem"),
+        rx.link("stage", href="/", color=SLATE, _hover={"color": GREEN}, font_size="2"),
         rx.text("|", color=GRAY),
-        rx.link("live", href="/stage", color=SLATE, _hover={"color": GREEN}, font_size="0.85rem"),
+        rx.link("live", href="/stage", color=SLATE, _hover={"color": GREEN}, font_size="2"),
         rx.text("|", color=GRAY),
-        rx.link("health", href="/health", color=SLATE, _hover={"color": GREEN}, font_size="0.85rem"),
+        rx.link("health", href="/health", color=SLATE, _hover={"color": GREEN}, font_size="2"),
         padding="1rem 2rem",
         border_bottom=f"1px solid {GREEN}22",
         background_color=BLACK,
