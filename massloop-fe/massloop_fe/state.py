@@ -142,10 +142,10 @@ class MassloopState(rx.State):
         except (ValueError, IndexError):
             pass
 
-    def set_energy(self, value: str):
+    def set_energy(self, value: list[float]):
         try:
-            self.energy = float(value)
-        except ValueError:
+            self.energy = float(value[0]) if value else self.energy
+        except (ValueError, IndexError):
             pass
 
     def set_tags(self, value: str):
