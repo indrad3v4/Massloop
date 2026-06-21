@@ -154,5 +154,11 @@ class MassloopState(rx.State):
     def set_style(self, value: str):
         self.style = value
 
+    def increment_bpm(self):
+        self.bpm = min(200, self.bpm + 5)
+
+    def decrement_bpm(self):
+        self.bpm = max(80, self.bpm - 5)
+
     def start(self):
         return rx.redirect("/mix-trial")

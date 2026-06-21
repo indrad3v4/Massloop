@@ -78,11 +78,11 @@ def index() -> rx.Component:
                         rx.vstack(
                             rx.text("$ bpm", color=SLATE, font_size="1"),
                             rx.hstack(
-                                rx.button("-", on_click=rx.set_value("bpm_display", max(80, rx.State.get().bpm - 5)),
+                                rx.button("-", on_click=MassloopState.decrement_bpm,
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="2", padding="0.1rem 0.5rem"),
                                 rx.text(MassloopState.bpm, font_size="5", color=WHITE, id="bpm_display"),
-                                rx.button("+", on_click=rx.set_value("bpm_display", min(200, rx.State.get().bpm + 5)),
+                                rx.button("+", on_click=MassloopState.increment_bpm,
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="2", padding="0.1rem 0.5rem"),
                                 spacing="2",
