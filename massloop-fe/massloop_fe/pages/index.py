@@ -22,7 +22,7 @@ def index() -> rx.Component:
                         color=SLATE, font_size="0.85rem", margin_top="0.25rem"),
                 rx.text("> AI-powered live generation for underground electronic music",
                         color=f"{SLATE}aa", font_size="0.75rem"),
-                spacing="4"
+                spacing="4",
                 align_items="center",
                 padding="2rem 0",
             ),
