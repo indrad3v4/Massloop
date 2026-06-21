@@ -1,6 +1,6 @@
 """Massloop DJ Mix Trial page"""
 import reflex as rx
-from ...state import MassloopState
+from ..state import MassloopState
 
 
 STYLES = {
