@@ -1,79 +1,71 @@
 # 🎛️ massloop.run
 
-**AI-powered DJ orchestration.** Generate, mix, and deploy live-performance tracks — **free trial, then pay-as-you-go**.
+**Ты — диджей. Ты — перформер. Ты артист, который не хочет тратить время на меню.**
 
-[![Python](https://img.shields.io/badge/Python-3.13-blue)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)](https://fastapi.tiangolo.com)
-[![Reflex](https://img.shields.io/badge/Reflex-0.6-purple)](https://reflex.dev)
-[![Railway](https://img.shields.io/badge/Railway-deployed-black)](https://railway.app)
-[![MOA](https://img.shields.io/badge/MOA-Mixture%20of%20Agents-orange)](#-ai-orchestrator)
+Это твой бесшовный генератор живых сетов. Ты выбираешь venue, BPM, energy → твои AI-агенты договариваются между собой → Suno генерирует трек за 3 секунды → ты одобряешь или дропаешь → готовый MP3 в колонках.
+
+Никаких подписок. Никаких лишних шагов. Ты на сцене — инструмент работает.
 
 ---
 
-## TL;DR
+## 💰 Твои деньги, твой формат
 
-🎵 Выбираешь **venue**, **BPM**, **energy** → AI-агенты договариваются (Mixture of Agents) → **Suno** генерирует трек → ты **одобряешь или дропаешь** (Human-in-the-Loop) → готовый MP3.
-
----
-
-## 💰 Pricing
-
-| Этап | Что получаешь |
-|------|--------------|
+| Что | Что ты получаешь |
+|-----|-----------------|
 | 🆓 **Free Trial** | 2 трека, 1 микс — **бесплатно**, без карты |
 | ⚡ **PAYG** | Покупаешь пакеты треков. Сколько взял — столько потратил. **Никаких подписок.** |
 
-> **Подписки умерли.** Ни €9/мес, ни €29/мес. Просто **заправился и поехал.**
+> Подписки умерли. Ни €9/мес, ни €29/мес. Просто заправился и поехал.
 
 ---
 
-## 🧠 AI Orchestrator (MOA)
+## 🧠 Твои AI-агенты
 
-**Mixture of Agents** — несколько LLM-агентов спорят, договариваются и синтезируют трек:
+Mixture of Agents — несколько LLM-агентов спорят, договариваются и синтезируют трек **под твой сет**:
 
-| Агент | Роль |
-|-------|------|
+| Агент | Его работа для тебя |
+|-------|---------------------|
 | 🎯 **Director** | Выбирает структуру трека + стиль под venue |
 | 🎛️ **Mixer** | Решает BPM, energy flow, переходы |
 | ✍️ **Lyricist** | Пишет текст под жанр (если нужно) |
 | ✅ **Critic** | Оценивает результат — пускать в HITL или перегенерировать |
 
-👉 **Человек** получает финальный превью и нажимает **Approve / Reject**.  
-Без одобрения — трек не уходит в продакшен.
+**Ты** получаешь финальный превью и нажимаешь **Approve / Reject**.  
+Без твоего одобрения — трек не уходит в продакшен.
 
 **Синтез:** CometAPI → Suno v4/v5 (`chirp-v4`, `chirp-auk`, `chirp-crow`).  
 **Себестоимость:** ~$0.08–0.15/трек.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Твой стек
 
 ```
 massloop.run
   │
-  ├── 🖥️ massloop-fe        Reflex frontend (Python)
-  │     ├── pages/           mix_trial, health, dashboard
+  ├── 🖥️ massloop-fe        Твой интерфейс (Reflex)
+  │     ├── pages/           mix_trial, stage, health
   │     ├── components/      UI kit (Radix-themed)
-  │     └── state.py         Trial + PAYG state management
+  │     └── state.py         Твой стейт
   │
-  ├── ⚙️  massloop-be        FastAPI backend
-  │     ├── controllers/     REST endpoints + HITL queue
-  │     ├── services/        CometAPI/Suno adapter, state machine
+  ├── ⚙️  massloop-be        Твой бэкенд (FastAPI)
+  │     ├── controllers/     endpoints + HITL
+  │     ├── services/        CometAPI/Suno adapter
   │     ├── orchestrator/    OpenAI Agents SDK + MOA pipeline
   │     └── main.py          CORS, routers, middleware
   │
-  └── ☁️  Railway            Деплой (BE + FE, single-port)
+  └── ☁️  Railway            Твой деплой
 ```
 
 ---
 
-## 🔌 API
+## 🔌 Твои endpoints
 
-| Endpoint | Что делает |
-|----------|-----------|
-| `GET /api/health` | Живой? ✅ |
+| Endpoint | Что тебе даёт |
+|----------|--------------|
+| `GET /api/health` | Проверка: жив? ✅ |
 | `POST /api/performance/queue` | Создать заявку на трек (pending) |
-| `POST /api/performance/approve/{id}` | Человек аппрувнул → Suno генерит |
+| `POST /api/performance/approve/{id}` | Ты аппрувнул → Suno генерит |
 | `GET /api/performance/status/{id}` | Статус генерации |
 | `GET /api/performance/result/{id}` | Скачать MP3 / ошибка |
 | `POST /api/trial/start` | Запустить триал (2 трека) |
@@ -91,12 +83,12 @@ massloop.run
 | **massloop-fe** | `massloop-fe/` | `reflex run --env prod --single-port --frontend-port $PORT` |
 
 **DNS:**
-- 🌐 `massloop.run` → massloop-fe
-- 🔗 `api.massloop.run` → massloop-be
+- 🌐 `massloop.run` → твой фронтенд
+- 🔗 `api.massloop.run` → твой бэкенд
 
 ---
 
-## 🛠️ Local Dev (за 5 минут)
+## 🛠️ Твоя локальная разработка (за 5 минут)
 
 ### Предварительно
 
