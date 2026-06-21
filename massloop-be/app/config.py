@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     suno_api_key: str = ""
     suno_base_url: str = "https://api.cometapi.com"
+    cometapi_key: str = ""
     openai_api_key: str = ""
     deepseek_api_key: str = ""
 

@@ -3,18 +3,28 @@
 import os
 from typing import Optional
 
-from agents import Agent, Runner, function_tool, set_default_openai_key
+from openai import AsyncOpenAI
+from agents import Agent, Runner, function_tool, set_default_openai_client
+from agents.tracing import set_tracing_disabled
 from loguru import logger
+
+
+# Disable OpenAI platform tracing; we route through CometAPI.
+set_tracing_disabled(True)
 
 from app.config import settings
 from .prompts import MUSIC_ORCHESTRATOR_SYSTEM_PROMPT, build_orchestrator_context
 from .tools import generate_track, poll_track, get_style_suggestions
 
 
-# Ensure the OpenAI Agents SDK can authenticate.
-if settings.openai_api_key:
-    set_default_openai_key(settings.openai_api_key)
-    os.environ.setdefault("OPENAI_API_KEY", settings.openai_api_key)
+# Route the OpenAI Agents SDK through CometAPI's OpenAI-compatible endpoint.
+if settings.cometapi_key:
+    client = AsyncOpenAI(
+        api_key=settings.cometapi_key,
+        base_url="https://api.cometapi.com/v1",
+    )
+    set_default_openai_client(client)
+    os.environ.setdefault("COMETAPI_KEY", settings.cometapi_key)
 
 
 @function_tool

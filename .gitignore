@@ -5,3 +5,12 @@ data/
 *.wav
 profiles/
 dist/
+
+# Virtual environments
+massloop_env/
+massloop_be_venv/
+massloop_fe_venv/
+venv/
+.venv/
+env/
+logs/
