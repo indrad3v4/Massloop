@@ -1,8 +1,13 @@
 import reflex as rx
-from .pages.index import index
-from .pages.health import health_check
-from .pages.mix_trial_page import mix_trial_page
-from .pages.performance import performance_page
+from .pages import (
+    index, 
+    landing_page, 
+    onboard_page, 
+    library_page, 
+    performance_page, 
+    health_check, 
+    mix_trial_page
+)
 
 # ── Rave aesthetic palette (suckpuck inspo) ──
 BLACK  = "#0a0a0a"
@@ -27,7 +32,9 @@ def global_styles() -> dict:
 app = rx.App(
     style=global_styles(),
 )
-app.add_page(index, route="/", title="Massloop · stage")
+app.add_page(index, route="/", title="Massloop · landing")
+app.add_page(onboard_page, route="/onboard", title="Massloop · onboarding")
+app.add_page(library_page, route="/library", title="Massloop · library")
+app.add_page(performance_page, route="/stage", title="Massloop · live")
 app.add_page(health_check, route="/health", title="Massloop · health")
 app.add_page(mix_trial_page, route="/mix-trial", title="Massloop · mix trial")
-app.add_page(performance_page, route="/stage", title="Massloop · live")

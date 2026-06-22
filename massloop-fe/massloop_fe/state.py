@@ -1,7 +1,7 @@
 import os
 import reflex as rx
 
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+BACKEND_URL = os.getenv("BACKEND_URL", "https://massloop-be-production.up.railway.app")
 
 
 class MassloopState(rx.State):
@@ -42,6 +42,19 @@ class MassloopState(rx.State):
     crossfader: float = 0.5
     master_volume: float = 0.8
     active_deck: str = "A"
+
+    # ── User Journey ──
+    first_visit: bool = True
+
+    async def check_first_visit(self):
+        """Redirect returning users straight to the stage."""
+        if not self.first_visit:
+            return rx.redirect("/stage")
+
+    async def complete_onboarding(self):
+        """Mark onboarding as complete and move to stage."""
+        self.first_visit = False
+        return rx.redirect("/stage")
 
     # ── Orchestrator chat ──
     chat_history: list[dict] = []
@@ -139,7 +152,11 @@ class MassloopState(rx.State):
                     )
                     if r.status_code == 200:
                         result_data = r.json().get("result") or {}
-                        self.audio_url = result_data.get("audio_url", "")
+                        raw_url = result_data.get("audio_url", "")
+                        # If URL is relative, prefix with BACKEND_URL
+                        if raw_url and not raw_url.startswith("http"):
+                            raw_url = f"{BACKEND_URL}{raw_url}"
+                        self.audio_url = raw_url
                     return
 
                 # Still processing — update stage label
@@ -320,7 +337,10 @@ class MassloopState(rx.State):
                 )
                 if r2.status_code == 200:
                     result = r2.json().get("result") or {}
-                    self.audio_url = result.get("audio_url", "")
+                    raw_url = result.get("audio_url", "")
+                    if raw_url and not raw_url.startswith("http"):
+                        raw_url = f"{BACKEND_URL}{raw_url}"
+                    self.audio_url = raw_url
                     self.last_generated_status = "✅ loaded from queue"
                 else:
                     self.last_generated_status = f"result error: {r2.status_code}"
