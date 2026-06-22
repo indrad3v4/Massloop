@@ -43,6 +43,19 @@ class MassloopState(rx.State):
     master_volume: float = 0.8
     active_deck: str = "A"
 
+    # ── Orchestrator chat ──
+    chat_history: list[dict] = []
+    chat_input: str = ""
+
+    @rx.var
+    def chat_display(self) -> str:
+        """Join chat history into a single display string (avoids rx.foreach on list[dict])."""
+        lines = []
+        for msg in self.chat_history:
+            prefix = "> " if msg.get("role") == "user" else "< "
+            lines.append(f"{prefix}{msg.get('text', '')}")
+        return "\n".join(lines) if lines else ""
+
     @rx.var
     def has_queue_items(self) -> bool:
         return len(self.queue_items) > 0
@@ -316,6 +329,34 @@ class MassloopState(rx.State):
             self.master_volume = float(value[0]) if value else self.master_volume
         except (ValueError, IndexError):
             pass
+
+    # ── Orchestrator chat ──
+    def set_chat_input(self, value: str):
+        self.chat_input = value
+
+    async def send_chat(self):
+        import httpx
+        self.chat_history.append({"role": "user", "text": self.chat_input})
+        try:
+            async with httpx.AsyncClient() as c:
+                r = await c.post(
+                    f"{BACKEND_URL}/api/chat/orchestrator",
+                    json={
+                        "message": self.chat_input,
+                        "context": {"bpm": self.bpm, "energy": self.energy},
+                    },
+                    timeout=10,
+                )
+                data = r.json()
+                self.chat_history.append({"role": "orchestrator", "text": data.get("reply", "")})
+                action = data.get("action")
+                if action == "bump_bpm":
+                    self.increment_bpm()
+                elif action == "bump_energy":
+                    self.increment_energy()
+        except Exception as e:
+            self.chat_history.append({"role": "orchestrator", "text": f"ERR: {e}"})
+        self.chat_input = ""
 
     def start(self):
         return rx.redirect("/mix-trial")

@@ -10,6 +10,7 @@ from app.controllers.performance_router import router as performance_router, set
 from app.controllers.profile_router import router as profile_router
 from app.controllers.stripe_router import router as stripe_router
 from app.controllers.trial_router import router as trial_router
+from app.controllers.orchestrator_router import router as orchestrator_router
 from app.orchestrator import MusicOrchestratorAgent
 
 # ── Production env validation ──
@@ -51,6 +52,7 @@ app.include_router(performance_router)
 app.include_router(profile_router)
 app.include_router(stripe_router)
 app.include_router(trial_router)
+app.include_router(orchestrator_router, prefix="/api", tags=["orchestrator"])
 
 @app.get("/health")
 async def health():

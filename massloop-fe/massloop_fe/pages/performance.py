@@ -197,6 +197,65 @@ def performance_page() -> rx.Component:
                 margin_top="1rem",
             ),
 
+            # ═══ Orchestrator Chat ═══
+            terminal_box(
+                rx.vstack(
+                    rx.text("> orchestrator", color=GREEN, font_size="1"),
+                    rx.divider(border_color=f"{GREEN}22", margin="0.5rem 0"),
+
+                    # Chat history (uses computed var to avoid rx.foreach on list[dict])
+                    rx.cond(
+                        MassloopState.chat_display != "",
+                        rx.text(
+                            MassloopState.chat_display.to_string(),
+                            color=WHITE,
+                            font_size="0.9",
+                            font_family="monospace",
+                            white_space="pre-wrap",
+                            width="100%",
+                            max_height="200px",
+                            overflow_y="auto",
+                        ),
+                        rx.text("ask the orchestrator...", color=GRAY, font_size="1"),
+                    ),
+
+                    rx.divider(border_color=f"{GREEN}22", margin="0.5rem 0"),
+
+                    # Input + Send
+                    rx.hstack(
+                        rx.input(
+                            value=MassloopState.chat_input,
+                            on_change=MassloopState.set_chat_input,
+                            placeholder="tell the orchestrator...",
+                            background_color="#0a0a0a",
+                            border=f"1px solid {GREEN}44",
+                            color=GREEN,
+                            font_size="1",
+                            width="100%",
+                        ),
+                        rx.button(
+                            "SEND",
+                            on_click=MassloopState.send_chat,
+                            background_color=GREEN,
+                            color=BLACK,
+                            font_weight="700",
+                            font_size="1",
+                            padding="0.5rem 1rem",
+                            border_radius="0",
+                            _hover={"background_color": "#ff00ff"},
+                        ),
+                        width="100%",
+                        spacing="2",
+                    ),
+
+                    width="100%",
+                    align_items="stretch",
+                ),
+                width="90%",
+                max_width="720px",
+                margin_top="1rem",
+            ),
+
             # ═══ Soundflow Control — Deck A/B + Crossfader + Master ═══
             terminal_box(
                 rx.vstack(
