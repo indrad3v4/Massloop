@@ -1,6 +1,6 @@
 """Massloop live performance page — stage monitor + Soundflow Control"""
 import reflex as rx
-from ..state import MassloopState
+from ..state import MassloopState, QueueItem
 from ..components import (
     scanlines_overlay, terminal_box, buffer_bar,
     energy_gradient, status_dot, nav_bar, waveform_bars,
@@ -8,25 +8,25 @@ from ..components import (
 )
 
 
-def _track_row(track: rx.Var) -> rx.Component:
+def _track_row(track: QueueItem) -> rx.Component:
     """Render a single track row in the Soundflow queue list."""
     return rx.hstack(
         # Status badge
         rx.box(
             rx.text(
-                track["status"].to_string(),
+                track.status.to_string(),
                 font_size="1",
                 color=BLACK,
                 font_weight="700",
             ),
             background_color=rx.cond(
-                track["status"] == "complete",
+                track.status == "complete",
                 GREEN,
                 rx.cond(
-                    track["status"] == "generating",
+                    track.status == "generating",
                     AMBER,
                     rx.cond(
-                        track["status"] == "failed",
+                        track.status == "failed",
                         RED,
                         SLATE,
                     ),
@@ -40,7 +40,7 @@ def _track_row(track: rx.Var) -> rx.Component:
 
         # Task ID (truncated)
         rx.text(
-            track["id"].to_string(),
+            track.id.to_string(),
             font_size="1",
             color=WHITE,
             font_family="monospace",
@@ -50,16 +50,16 @@ def _track_row(track: rx.Var) -> rx.Component:
             white_space="nowrap",
         ),
 
-        # BPM from params
+        # BPM
         rx.text(
-            track["params"]["bpm"].to_string() + " BPM",
+            track.bpm.to_string() + " BPM",
             font_size="1",
             color=PINK,
         ),
 
-        # Style from params
+        # Style
         rx.text(
-            track["params"]["style"].to_string(),
+            track.style.to_string(),
             font_size="1",
             color=SLATE,
         ),
@@ -68,10 +68,10 @@ def _track_row(track: rx.Var) -> rx.Component:
 
         # Action buttons
         rx.cond(
-            track["status"] == "pending_approval",
+            track.status == "pending_approval",
             rx.button(
                 "KEEP",
-                on_click=MassloopState.approve_track(track["id"]),
+                on_click=MassloopState.approve_track(track.id),
                 variant="outline",
                 border=f"1px solid {GREEN}44",
                 color=GREEN,
@@ -427,7 +427,7 @@ def performance_page() -> rx.Component:
 
                     # Track list via foreach
                     rx.cond(
-                        MassloopState.queue_items.length() > 0,
+                        MassloopState.has_queue_items,
                         rx.vstack(
                             rx.foreach(MassloopState.queue_items, _track_row),
                             width="100%",

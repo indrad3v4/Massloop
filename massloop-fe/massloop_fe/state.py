@@ -3,6 +3,15 @@ import reflex as rx
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
+
+class QueueItem(rx.Base):
+    """Typed model for queue items — required for rx.foreach."""
+    id: str = ""
+    status: str = ""
+    bpm: int = 0
+    style: str = ""
+
+
 class MassloopState(rx.State):
     # ── Energy controls ──
     def decrement_energy(self):
@@ -37,10 +46,14 @@ class MassloopState(rx.State):
     stripe_url: str = ""
 
     # ── Soundflow Control (deck / queue) ──
-    queue_items: list[dict] = []
+    queue_items: list[QueueItem] = []
     crossfader: float = 0.5
     master_volume: float = 0.8
     active_deck: str = "A"
+
+    @rx.var
+    def has_queue_items(self) -> bool:
+        return len(self.queue_items) > 0
 
     # ── Health check ──
     async def check_health(self):
@@ -278,7 +291,16 @@ class MassloopState(rx.State):
             async with httpx.AsyncClient() as client:
                 r = await client.get(f"{BACKEND_URL}/api/performance/queue", timeout=10)
                 if r.status_code == 200:
-                    self.queue_items = r.json().get("queue", [])
+                    raw = r.json().get("queue", [])
+                    self.queue_items = [
+                        QueueItem(
+                            id=t.get("id", ""),
+                            status=t.get("status", ""),
+                            bpm=t.get("params", {}).get("bpm", 0),
+                            style=t.get("params", {}).get("style", ""),
+                        )
+                        for t in raw
+                    ]
                     self.queue_length = len(self.queue_items)
                 else:
                     self.queue_items = []
