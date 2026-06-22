@@ -147,8 +147,9 @@ def performance_page() -> rx.Component:
                     rx.vstack(
                         rx.text("$ history (last)", color=SLATE, font_size="1"),
                         rx.hstack(
-                            rx.text(f"id: {MassloopState.last_generated_id}", font_size="2", color=WHITE),
-                            rx.text(f"status: {MassloopState.last_generated_status}",
+                            rx.text("id: " + MassloopState.last_generated_id.to_string(),
+                                    font_size="2", color=WHITE),
+                            rx.text("status: " + MassloopState.last_generated_status.to_string(),
                                     font_size="2",
                                     color=rx.cond(
                                         MassloopState.last_generated_status == "submitted",
