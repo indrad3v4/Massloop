@@ -1,91 +1,11 @@
 """Massloop live performance page — stage monitor + Soundflow Control"""
 import reflex as rx
-from ..state import MassloopState, QueueItem
+from ..state import MassloopState
 from ..components import (
     scanlines_overlay, terminal_box, buffer_bar,
     energy_gradient, status_dot, nav_bar, waveform_bars,
     BLACK, GREEN, PINK, AMBER, GRAY, WHITE, SLATE, RED,
 )
-
-
-def _track_row(track: QueueItem) -> rx.Component:
-    """Render a single track row in the Soundflow queue list."""
-    return rx.hstack(
-        # Status badge
-        rx.box(
-            rx.text(
-                track.status.to_string(),
-                font_size="1",
-                color=BLACK,
-                font_weight="700",
-            ),
-            background_color=rx.cond(
-                track.status == "complete",
-                GREEN,
-                rx.cond(
-                    track.status == "generating",
-                    AMBER,
-                    rx.cond(
-                        track.status == "failed",
-                        RED,
-                        SLATE,
-                    ),
-                ),
-            ),
-            padding="2px 6px",
-            border_radius="2px",
-            min_width="80px",
-            text_align="center",
-        ),
-
-        # Task ID (truncated)
-        rx.text(
-            track.id.to_string(),
-            font_size="1",
-            color=WHITE,
-            font_family="monospace",
-            max_width="120px",
-            overflow="hidden",
-            text_overflow="ellipsis",
-            white_space="nowrap",
-        ),
-
-        # BPM
-        rx.text(
-            track.bpm.to_string() + " BPM",
-            font_size="1",
-            color=PINK,
-        ),
-
-        # Style
-        rx.text(
-            track.style.to_string(),
-            font_size="1",
-            color=SLATE,
-        ),
-
-        rx.spacer(),
-
-        # Action buttons
-        rx.cond(
-            track.status == "pending_approval",
-            rx.button(
-                "KEEP",
-                on_click=MassloopState.approve_track(track.id),
-                variant="outline",
-                border=f"1px solid {GREEN}44",
-                color=GREEN,
-                font_size="1",
-                padding="2px 8px",
-            ),
-            rx.text("—", color=GRAY, font_size="1"),
-        ),
-
-        width="100%",
-        spacing="3",
-        padding="4px 0",
-        border_bottom=f"1px solid {GREEN}11",
-    )
 
 
 def performance_page() -> rx.Component:
@@ -411,27 +331,25 @@ def performance_page() -> rx.Component:
 
                     rx.divider(border_color=f"{GREEN}22", margin="0.5rem 0"),
 
-                    # Queue header
-                    rx.hstack(
-                        rx.text("STATUS", color=SLATE, font_size="1", min_width="80px"),
-                        rx.text("ID", color=SLATE, font_size="1", min_width="120px"),
-                        rx.text("BPM", color=SLATE, font_size="1"),
-                        rx.text("STYLE", color=SLATE, font_size="1"),
-                        rx.spacer(),
-                        rx.text("ACTION", color=SLATE, font_size="1"),
-                        width="100%",
-                        spacing="3",
-                        border_bottom=f"1px solid {GREEN}33",
-                        padding_bottom="4px",
-                    ),
-
-                    # Track list via foreach
+                    # Queue summary (no rx.foreach — avoids UntypedVarError on list[dict])
                     rx.cond(
                         MassloopState.has_queue_items,
                         rx.vstack(
-                            rx.foreach(MassloopState.queue_items, _track_row),
+                            rx.text(
+                                "tracks in queue: " + MassloopState.queue_length.to_string(),
+                                color=GREEN, font_size="2", font_weight="600",
+                            ),
+                            rx.text(
+                                "last task: " + MassloopState.last_generated_id.to_string(),
+                                color=WHITE, font_size="1", font_family="monospace",
+                            ),
+                            rx.text(
+                                "status: " + MassloopState.last_generated_status.to_string(),
+                                color=AMBER, font_size="1",
+                            ),
                             width="100%",
-                            spacing="0",
+                            align_items="start",
+                            spacing="1",
                         ),
                         rx.text("queue empty — hit GENERATE or REFRESH",
                                 color=GRAY, font_size="1", padding="1rem 0"),
