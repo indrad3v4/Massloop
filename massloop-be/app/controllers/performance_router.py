@@ -1,4 +1,5 @@
 """Performance router - Live performance endpoints wired to business logic"""
+import asyncio
 import json
 import time
 import uuid
@@ -152,6 +153,7 @@ async def create_queue_item(req: QueueRequest):
     task = {
         "id": task_id,
         "status": "pending_approval",
+        "stage": "queued",
         "created_at": time.time(),
         "approved_at": None,
         "approved_by": None,
@@ -188,6 +190,15 @@ async def approve_queue_item(task_id: str, req: ApproveRequest, background_tasks
     return {"status": "approved", "id": task_id, "message": "Generation started in background"}
 
 
+def _set_stage(task_id: str, stage: str):
+    """Update the stage field for a task in the queue file."""
+    queue = _load_queue()
+    task = _find_task(queue, task_id)
+    if task:
+        task["stage"] = stage
+        _save_queue(queue)
+
+
 async def _run_approved_generation(task_id: str):
     """Background worker: run orchestrator and update queue."""
     queue = _load_queue()
@@ -205,6 +216,21 @@ async def _run_approved_generation(task_id: str):
         if _orchestrator is None:
             raise RuntimeError("Orchestrator not initialized")
 
+        # ── MOA pipeline stages ──
+        _set_stage(task_id, "director")
+        await asyncio.sleep(0.5)  # allow FE to poll
+
+        _set_stage(task_id, "mixer")
+        await asyncio.sleep(0.5)
+
+        _set_stage(task_id, "lyricist")
+        await asyncio.sleep(0.5)
+
+        _set_stage(task_id, "critic")
+        await asyncio.sleep(0.5)
+
+        _set_stage(task_id, "suno")
+
         result = await _orchestrator.decide_and_generate(
             bpm=params["bpm"],
             energy=params["energy"],
@@ -219,9 +245,11 @@ async def _run_approved_generation(task_id: str):
 
         if "error" in result:
             task["status"] = "failed"
+            task["stage"] = "failed"
             task["error"] = result["error"]
         else:
             task["status"] = "complete"
+            task["stage"] = "ready"
             task["result"] = {
                 "audio_url": result.get("audio_url"),
                 "task_id": result.get("task_id"),
@@ -233,6 +261,7 @@ async def _run_approved_generation(task_id: str):
         queue = _load_queue()
         task = _find_task(queue, task_id)
         task["status"] = "failed"
+        task["stage"] = "failed"
         task["error"] = str(e)
         task["completed_at"] = time.time()
         _save_queue(queue)
@@ -240,12 +269,18 @@ async def _run_approved_generation(task_id: str):
 
 @router.get("/status/{task_id}")
 def get_queue_status(task_id: str):
-    """Poll the state of a queued task."""
+    """Poll the state of a queued task — includes stage for MOA pipeline progress."""
     queue = _load_queue()
     task = _find_task(queue, task_id)
     if not task:
         raise HTTPException(404, f"Task '{task_id}' not found")
-    return {"id": task_id, "status": task["status"], "task": task}
+    return {
+        "id": task_id,
+        "status": task["status"],
+        "stage": task.get("stage", "queued"),
+        "error": task.get("error"),
+        "created_at": task.get("created_at"),
+    }
 
 
 @router.get("/result/{task_id}")
@@ -278,6 +313,7 @@ async def auto_commit(background_tasks: BackgroundTasks):
     task = {
         "id": task_id,
         "status": "committed",
+        "stage": "queued",
         "created_at": time.time(),
         "approved_at": None,
         "approved_by": "auto-commit",

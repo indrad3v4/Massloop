@@ -89,11 +89,74 @@ class MassloopState(rx.State):
         except Exception:
             self.queue_length = -1
 
-    # ── Generate (stage) ──
-    async def generate(self):
-        """Full gen→play cycle: queue → approve → poll → result."""
+    # ── Generate with MOA stage polling ──
+    generation_stage: str = ""
+    generation_task_id: str = ""
+    is_generating: bool = False
+
+    STAGE_LABELS = {
+        "queued":   "⏳ in queue — waiting for orchestrator...",
+        "director": "🧠 director: choosing track structure & style...",
+        "mixer":    "🎛️ mixer: setting BPM curve & energy flow...",
+        "lyricist": "✍️ lyricist: writing lyrics...",
+        "critic":   "✅ critic: evaluating quality...",
+        "suno":     "🎵 suno: generating audio...",
+        "ready":    "✅ ready!",
+        "failed":   "❌ generation failed",
+    }
+
+    async def poll_generation(self):
+        """Poll BE every 2 seconds while generating — updates generation_stage."""
         import httpx
         import asyncio
+        while self.is_generating and self.generation_task_id:
+            await asyncio.sleep(2)
+            try:
+                async with httpx.AsyncClient() as client:
+                    resp = await client.get(
+                        f"{BACKEND_URL}/api/performance/status/{self.generation_task_id}",
+                        timeout=10,
+                    )
+                    data = resp.json()
+
+                stage = data.get("stage", "")
+                status = data.get("status", "")
+
+                if status == "failed":
+                    self.generation_stage = "failed"
+                    self.last_generated_status = f"❌ {data.get('error', 'unknown error')}"
+                    self.is_generating = False
+                    return
+
+                if status == "complete" or stage == "ready":
+                    self.generation_stage = "ready"
+                    self.last_generated_status = "✅ ready"
+                    self.is_generating = False
+                    # Load audio via result endpoint
+                    r = await client.get(
+                        f"{BACKEND_URL}/api/performance/result/{self.generation_task_id}",
+                        timeout=10,
+                    )
+                    if r.status_code == 200:
+                        result_data = r.json().get("result") or {}
+                        self.audio_url = result_data.get("audio_url", "")
+                    return
+
+                # Still processing — update stage label
+                self.generation_stage = stage
+                self.last_generated_status = self.STAGE_LABELS.get(stage, f"⏳ {stage}...")
+
+            except Exception as e:
+                self.last_generated_status = f"poll error: {str(e)[:30]}"
+                await asyncio.sleep(2)
+
+    async def handle_generate(self):
+        """Called when user clicks GENERATE — queue → approve → poll stages."""
+        import httpx
+        self.last_generated_status = "queued..."
+        self.generation_stage = "queued"
+        self.is_generating = True
+        self.audio_url = ""
 
         try:
             async with httpx.AsyncClient() as client:
@@ -111,11 +174,12 @@ class MassloopState(rx.State):
                 )
                 if r.status_code != 200:
                     self.last_generated_status = f"queue error: {r.status_code}"
+                    self.is_generating = False
                     return
 
                 task_id = r.json().get("id", "")
+                self.generation_task_id = task_id
                 self.last_generated_id = task_id
-                self.last_generated_status = "pending_approval"
 
                 # 2. Approve (triggers background generation)
                 r2 = await client.post(
@@ -125,43 +189,17 @@ class MassloopState(rx.State):
                 )
                 if r2.status_code != 200:
                     self.last_generated_status = f"approve error: {r2.status_code}"
+                    self.is_generating = False
                     return
 
                 self.last_generated_status = "generating"
 
-                # 3. Poll status until complete or failed
-                for _ in range(24):  # max ~120s
-                    await asyncio.sleep(5)
-                    r3 = await client.get(
-                        f"{BACKEND_URL}/api/performance/status/{task_id}",
-                        timeout=10,
-                    )
-                    if r3.status_code != 200:
-                        continue
-                    status = r3.json().get("status", "")
-                    self.last_generated_status = status
+            # 3. Start polling in background
+            return MassloopState.poll_generation
 
-                    if status == "complete":
-                        # 4. Fetch result
-                        r4 = await client.get(
-                            f"{BACKEND_URL}/api/performance/result/{task_id}",
-                            timeout=10,
-                        )
-                        if r4.status_code == 200:
-                            result = r4.json().get("result") or {}
-                            self.audio_url = result.get("audio_url", "")
-                            self.last_generated_status = "✅ ready"
-                        else:
-                            self.last_generated_status = "result error"
-                        break
-
-                    if status == "failed":
-                        self.last_generated_status = "❌ failed"
-                        break
-
-                await self.poll_queue()
         except Exception as e:
             self.last_generated_status = f"error: {str(e)[:40]}"
+            self.is_generating = False
 
     # ── Start trial (mix trial flow) ──
     async def start_trial(self):

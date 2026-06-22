@@ -114,9 +114,18 @@ def performance_page() -> rx.Component:
                         rx.vstack(
                             rx.text("trigger", color=PINK, font_size="1", font_weight="600"),
                             rx.button(
-                                "▶ GENERATE NEXT",
-                                on_click=MassloopState.generate,
-                                background_color=GREEN,
+                                rx.cond(
+                                    MassloopState.is_generating,
+                                    "⏳ GENERATING...",
+                                    "▶ GENERATE NEXT"
+                                ),
+                                on_click=MassloopState.handle_generate,
+                                is_disabled=MassloopState.is_generating,
+                                background_color=rx.cond(
+                                    MassloopState.is_generating,
+                                    "#333",
+                                    GREEN,
+                                ),
                                 color=BLACK,
                                 font_weight="700",
                                 font_size="4",
