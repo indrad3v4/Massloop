@@ -1,7 +1,7 @@
 import os
 import reflex as rx
 
-BACKEND_URL = os.getenv("BACKEND_URL", "https://massloop-be-production.up.railway.app")
+BACKEND_URL = os.getenv("BACKEND_URL") or "https://massloop-be-production.up.railway.app"
 
 
 class MassloopState(rx.State):
