@@ -91,12 +91,12 @@ def mix_trial_page() -> rx.Component:
                 rx.vstack(
                     rx.text("Track 1 (raw):", color=STYLES["WHITE"], margin_top="1rem"),
                     rx.audio(
-                        url=MassloopState.audio_url,
+                        src=MassloopState.audio_url,
                         width="100%",
                     ),
                     rx.text("Track 2 (mix):", color=STYLES["WHITE"], margin_top="1rem"),
                     rx.audio(
-                        url=MassloopState.audio_url,  # same source for demo
+                        src=MassloopState.audio_url,  # same source for demo
                         width="100%",
                     ),
                     rx.button(
