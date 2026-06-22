@@ -63,7 +63,7 @@ def index() -> rx.Component:
                         # Energy section
                         rx.vstack(
                             rx.text("$ energy", color=SLATE, font_size="2"),
-                            energy_gradient(0.7),
+                            energy_gradient(70),
                             rx.text("70%", color=AMBER, font_size="1"),
                             align_items="end",
                         ),

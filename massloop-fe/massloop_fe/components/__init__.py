@@ -75,8 +75,8 @@ def buffer_bar(count: int, total: int = 3) -> rx.Component:
         )
     return rx.hstack(*bars, spacing="1", align_items="center")
 
-def energy_gradient(value: float) -> rx.Component:
-    pct = max(1, min(100, int(value * 100)))
+def energy_gradient(pct: int) -> rx.Component:
+    pct = max(1, min(100, pct))
     return rx.box(
         rx.box(
             height="100%",

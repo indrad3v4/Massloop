@@ -59,7 +59,7 @@ def performance_page() -> rx.Component:
                         rx.spacer(),
                         rx.vstack(
                             rx.text("$ crowd", color=SLATE, font_size="1"),
-                            energy_gradient(MassloopState.energy),
+                            energy_gradient(MassloopState.energy_pct),
                             rx.text(
                                 "crowd energy: " + MassloopState.energy.to_string() + " · tracking",
                                 color=AMBER, font_size="1",

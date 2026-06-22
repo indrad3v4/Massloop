@@ -12,6 +12,11 @@ class MassloopState(rx.State):
     def increment_energy(self):
         """Increase energy by 0.1, not exceeding 1.0."""
         self.energy = min(1.0, self.energy + 0.1)
+
+    @rx.var
+    def energy_pct(self) -> int:
+        return max(1, min(100, int(self.energy * 100)))
+
     backend_status: str = "checking..."
     backend_ok: bool = False
 
