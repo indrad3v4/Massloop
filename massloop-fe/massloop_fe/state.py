@@ -36,6 +36,12 @@ class MassloopState(rx.State):
     tags: str = ""
     stripe_url: str = ""
 
+    # ── Soundflow Control (deck / queue) ──
+    queue_items: list[dict] = []
+    crossfader: float = 0.5
+    master_volume: float = 0.8
+    active_deck: str = "A"
+
     # ── Health check ──
     async def check_health(self):
         try:
@@ -226,6 +232,85 @@ class MassloopState(rx.State):
 
     def decrement_bpm(self):
         self.bpm = max(80, self.bpm - 5)
+
+    # ── Soundflow Control events ──
+    async def fetch_latest_generated(self):
+        """GET /queue → find last completed task → GET /result/{id} → set audio_url."""
+        import httpx
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.get(f"{BACKEND_URL}/api/performance/queue", timeout=10)
+                if r.status_code != 200:
+                    self.last_generated_status = f"queue error: {r.status_code}"
+                    return
+
+                queue = r.json().get("queue", [])
+                if not queue:
+                    self.last_generated_status = "queue empty"
+                    return
+
+                # Find last completed task
+                completed = [t for t in queue if t.get("status") == "complete"]
+                if not completed:
+                    self.last_generated_status = "no completed tracks"
+                    return
+
+                last = completed[-1]
+                task_id = last.get("id", "")
+                self.last_generated_id = task_id
+
+                r2 = await client.get(
+                    f"{BACKEND_URL}/api/performance/result/{task_id}", timeout=10
+                )
+                if r2.status_code == 200:
+                    result = r2.json().get("result") or {}
+                    self.audio_url = result.get("audio_url", "")
+                    self.last_generated_status = "✅ loaded from queue"
+                else:
+                    self.last_generated_status = f"result error: {r2.status_code}"
+        except Exception as e:
+            self.last_generated_status = f"error: {str(e)[:40]}"
+
+    async def fetch_queue(self):
+        """Load full queue into queue_items for the Soundflow track list."""
+        import httpx
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.get(f"{BACKEND_URL}/api/performance/queue", timeout=10)
+                if r.status_code == 200:
+                    self.queue_items = r.json().get("queue", [])
+                    self.queue_length = len(self.queue_items)
+                else:
+                    self.queue_items = []
+        except Exception:
+            self.queue_items = []
+
+    async def approve_track(self, task_id: str):
+        """Approve a pending track in the queue."""
+        import httpx
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.post(
+                    f"{BACKEND_URL}/api/performance/approve/{task_id}",
+                    json={"approved_by": "stage_operator"},
+                    timeout=10,
+                )
+                if r.status_code == 200:
+                    await self.fetch_queue()
+        except Exception:
+            pass
+
+    def set_crossfader(self, value: list[float]):
+        try:
+            self.crossfader = float(value[0]) if value else self.crossfader
+        except (ValueError, IndexError):
+            pass
+
+    def set_master_volume(self, value: list[float]):
+        try:
+            self.master_volume = float(value[0]) if value else self.master_volume
+        except (ValueError, IndexError):
+            pass
 
     def start(self):
         return rx.redirect("/mix-trial")

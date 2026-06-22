@@ -100,6 +100,30 @@ def status_dot(ok) -> rx.Component:
         box_shadow=rx.cond(ok, f"0 0 6px {GREEN}", f"0 0 6px {RED}"),
     )
 
+def waveform_bars(active: bool = True) -> rx.Component:
+    """Animated CSS waveform visualization (placeholder)."""
+    bars = []
+    heights = [40, 70, 50, 90, 60, 80, 45, 75, 55, 85, 35, 65, 50, 70, 40, 60]
+    for h in heights:
+        bars.append(
+            rx.box(
+                width="3px",
+                height=f"{h}%",
+                background_color=GREEN if active else f"{GREEN}44",
+                border_radius="1px",
+                margin="0 1px",
+                class_name="wave-bar" if active else "",
+                transition="height 0.2s ease",
+            )
+        )
+    return rx.hstack(
+        *bars,
+        height="40px",
+        align_items="center",
+        spacing="0",
+    )
+
+
 def nav_bar() -> rx.Component:
     return rx.hstack(
         rx.hstack(
