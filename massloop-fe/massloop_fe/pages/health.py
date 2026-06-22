@@ -40,7 +40,8 @@ def health_check() -> rx.Component:
                     ),
                     rx.cond(
                         MassloopState.queue_length >= 0,
-                        rx.text(f"items: {MassloopState.queue_length}", font_size="2", color=SLATE,
+                        rx.text("items: " + MassloopState.queue_length.to_string(),
+                                font_size="2", color=SLATE,
                                 padding_left="1.5rem"),
                         rx.text("queue: unreachable", font_size="2", color=RED,
                                 padding_left="1.5rem"),
