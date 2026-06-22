@@ -71,7 +71,7 @@ def _track_row(track: rx.Var) -> rx.Component:
             track["status"] == "pending_approval",
             rx.button(
                 "KEEP",
-                on_click=MassloopState.approve_track(track["id"].to_string()),
+                on_click=MassloopState.approve_track(track["id"]),
                 variant="outline",
                 border=f"1px solid {GREEN}44",
                 color=GREEN,
