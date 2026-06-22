@@ -4,6 +4,14 @@ import reflex as rx
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 class MassloopState(rx.State):
+    # ── Energy controls ──
+    def decrement_energy(self):
+        """Decrease energy by 0.1, not going below 0.1."""
+        self.energy = max(0.1, self.energy - 0.1)
+
+    def increment_energy(self):
+        """Increase energy by 0.1, not exceeding 1.0."""
+        self.energy = min(1.0, self.energy + 0.1)
     backend_status: str = "checking..."
     backend_ok: bool = False
 
@@ -54,21 +62,75 @@ class MassloopState(rx.State):
 
     # ── Generate (stage) ──
     async def generate(self):
+        """Full gen→play cycle: queue → approve → poll → result."""
+        import httpx
+        import asyncio
+
         try:
-            import httpx
             async with httpx.AsyncClient() as client:
+                # 1. Create queue item
                 r = await client.post(
                     f"{BACKEND_URL}/api/performance/queue",
-                    json={"prompt": "test", "style": self.style, "bpm": self.bpm, "energy": self.energy},
+                    json={
+                        "prompt": f"{self.style} at {self.bpm} BPM",
+                        "style": self.style,
+                        "bpm": self.bpm,
+                        "energy": self.energy,
+                        "venue": self.venue,
+                    },
                     timeout=10,
                 )
-                if r.status_code == 200:
-                    data = r.json()
-                    self.last_generated_id = data.get("id", "")
-                    self.last_generated_status = "submitted"
-                    await self.poll_queue()
-                else:
-                    self.last_generated_status = f"error: {r.status_code}"
+                if r.status_code != 200:
+                    self.last_generated_status = f"queue error: {r.status_code}"
+                    return
+
+                task_id = r.json().get("id", "")
+                self.last_generated_id = task_id
+                self.last_generated_status = "pending_approval"
+
+                # 2. Approve (triggers background generation)
+                r2 = await client.post(
+                    f"{BACKEND_URL}/api/performance/approve/{task_id}",
+                    json={"approved_by": "stage_operator"},
+                    timeout=10,
+                )
+                if r2.status_code != 200:
+                    self.last_generated_status = f"approve error: {r2.status_code}"
+                    return
+
+                self.last_generated_status = "generating"
+
+                # 3. Poll status until complete or failed
+                for _ in range(24):  # max ~120s
+                    await asyncio.sleep(5)
+                    r3 = await client.get(
+                        f"{BACKEND_URL}/api/performance/status/{task_id}",
+                        timeout=10,
+                    )
+                    if r3.status_code != 200:
+                        continue
+                    status = r3.json().get("status", "")
+                    self.last_generated_status = status
+
+                    if status == "complete":
+                        # 4. Fetch result
+                        r4 = await client.get(
+                            f"{BACKEND_URL}/api/performance/result/{task_id}",
+                            timeout=10,
+                        )
+                        if r4.status_code == 200:
+                            result = r4.json().get("result") or {}
+                            self.audio_url = result.get("audio_url", "")
+                            self.last_generated_status = "✅ ready"
+                        else:
+                            self.last_generated_status = "result error"
+                        break
+
+                    if status == "failed":
+                        self.last_generated_status = "❌ failed"
+                        break
+
+                await self.poll_queue()
         except Exception as e:
             self.last_generated_status = f"error: {str(e)[:40]}"
 

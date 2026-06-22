@@ -32,7 +32,8 @@ def mix_trial_page() -> rx.Component:
             ),
 
             # BPM slider
-            rx.text(f"BPM: {MassloopState.bpm}", color=STYLES["WHITE"], font_weight="600"),
+            rx.text("BPM: " + MassloopState.bpm.to_string(),
+                    color=STYLES["WHITE"], font_weight="600"),
             rx.slider(
                 default_value=124,
                 min=110,
@@ -43,7 +44,8 @@ def mix_trial_page() -> rx.Component:
             ),
 
             # Energy
-            rx.text(f"Energy: {MassloopState.energy:.1f}", color=STYLES["WHITE"], font_weight="600"),
+            rx.text("Energy: " + MassloopState.energy.to_string(),
+                    color=STYLES["WHITE"], font_weight="600"),
             rx.slider(
                 default_value=0.7,
                 min=0.0,

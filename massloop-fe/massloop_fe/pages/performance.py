@@ -33,8 +33,10 @@ def performance_page() -> rx.Component:
                             spacing="2",
                         ),
                         rx.spacer(),
-                        rx.text("140 BPM · ACID TECHNO", color=PINK, font_size="2",
-                                font_weight="600"),
+                        rx.text(
+                            MassloopState.bpm.to_string() + " BPM · " + MassloopState.style,
+                            color=PINK, font_size="2", font_weight="600",
+                        ),
                         width="100%",
                     ),
 
@@ -46,7 +48,8 @@ def performance_page() -> rx.Component:
                             rx.text("$ buffer", color=SLATE, font_size="1"),
                             rx.hstack(
                                 buffer_bar(2, 3),
-                                rx.text("2/3", color=GREEN, font_size="2"),
+                                rx.text(MassloopState.queue_length.to_string(),
+                                        color=GREEN, font_size="2"),
                                 spacing="3",
                             ),
                             rx.text("auto-fill: active · 1 generating",
@@ -56,9 +59,11 @@ def performance_page() -> rx.Component:
                         rx.spacer(),
                         rx.vstack(
                             rx.text("$ crowd", color=SLATE, font_size="1"),
-                            energy_gradient(0.7),
-                            rx.text("crowd energy: 70% · tracking",
-                                    color=AMBER, font_size="1"),
+                            energy_gradient(MassloopState.energy),
+                            rx.text(
+                                "crowd energy: " + MassloopState.energy.to_string() + " · tracking",
+                                color=AMBER, font_size="1",
+                            ),
                             align_items="end",
                         ),
                         width="100%",
@@ -72,11 +77,11 @@ def performance_page() -> rx.Component:
                         rx.vstack(
                             rx.text("control", color=PINK, font_size="1", font_weight="600"),
                             rx.hstack(
-                                rx.button("−E", on_click=rx.set_value("energy_val", max(0.1, rx.State.get().energy - 0.1)),
+                                rx.button("−E", on_click=MassloopState.decrement_energy,
                                          variant="outline", border=f"1px solid {AMBER}44",
                                          color=AMBER, font_size="1"),
                                 rx.box(height="80px"),
-                                rx.button("+E", on_click=rx.set_value("energy_val", min(1.0, rx.State.get().energy + 0.1)),
+                                rx.button("+E", on_click=MassloopState.increment_energy,
                                          variant="outline", border=f"1px solid {AMBER}44",
                                          color=AMBER, font_size="1"),
                                 spacing="2",
@@ -90,11 +95,11 @@ def performance_page() -> rx.Component:
                         rx.vstack(
                             rx.text("tempo", color=PINK, font_size="1", font_weight="600"),
                             rx.hstack(
-                                rx.button("−B", on_click=rx.set_value("bpm_val", max(80, rx.State.get().bpm - 5)),
+                                rx.button("−B", on_click=MassloopState.decrement_bpm,
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="1"),
                                 rx.box(height="80px"),
-                                rx.button("+B", on_click=rx.set_value("bpm_val", min(200, rx.State.get().bpm + 5)),
+                                rx.button("+B", on_click=MassloopState.increment_bpm,
                                          variant="outline", border=f"1px solid {GREEN}44",
                                          color=GREEN, font_size="1"),
                                 spacing="2",
