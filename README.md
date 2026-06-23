@@ -1,6 +1,8 @@
 # 🎛️ massloop.run
 
-**You are the DJ. You are the performer. You are the artist who doesn't want to waste time on menus.**
+**You are the artist. 4 AI agents are your backstage crew.**
+
+Describe the vibe. They negotiate. You approve.
 
 This is your seamless live-set generator. You pick venue, BPM, energy → your AI agents negotiate → Suno generates a track in seconds → you approve or drop it → ready MP3 hits the speakers.
 
@@ -99,7 +101,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Keys in .env (or in ~/.bashrc):
 export COMETAPI_KEY="s# 🎛️ massloop.run
 
-**You are the DJ. You are the performer. You are the artist who doesn't want to waste time on menus.**
+**You are the artist. 4 AI agents are your backstage crew.**
+
+Describe the vibe. They negotiate. You approve.
 
 This is your seamless live-set generator. You pick venue, BPM, energy → your AI agents negotiate → Suno generates a track in seconds → you approve or drop it → ready MP3 hits the speakers.
 
