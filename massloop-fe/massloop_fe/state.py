@@ -8,8 +8,12 @@ class MassloopState(rx.State):
     # ── Artist Brand Setters ──
     def set_artist_name(self, v: str): self.artist_name = v
     def set_artist_genre(self, v: str): self.artist_genre = v
-    def set_artist_bpm_min(self, v: int): self.artist_bpm_min = v
-    def set_artist_bpm_max(self, v: int): self.artist_bpm_max = v
+    def set_artist_bpm_min(self, v: str): 
+        try: self.artist_bpm_min = int(v) or 120
+        except: self.artist_bpm_min = 120
+    def set_artist_bpm_max(self, v: str): 
+        try: self.artist_bpm_max = int(v) or 160
+        except: self.artist_bpm_max = 160
     def set_artist_signature(self, v: str): self.artist_signature = v
     def set_artist_tone(self, v: str): self.artist_tone = v
     def set_artist_negative_tags(self, v: str): self.artist_negative_tags = v
