@@ -150,14 +150,32 @@ def performance_page() -> rx.Component:
                 max_width="720px",
             ),
 
-            # ═══ Audio Player + Latest from GH ═══
+            # ═══ Audio Player + Upload ═══
             terminal_box(
                 rx.vstack(
                     rx.hstack(
                         rx.text("$ audio deck", color=SLATE, font_size="1"),
                         rx.spacer(),
+                        # Upload local track
+                        rx.upload(
+                            rx.button(
+                                "📂 UPLOAD TRACK",
+                                variant="outline",
+                                border=f"1px solid {PINK}44",
+                                color=PINK,
+                                font_size="1",
+                                font_weight="600",
+                                padding="4px 12px",
+                                _hover={"background_color": f"{PINK}22"},
+                            ),
+                            multiple=False,
+                            accept={".mp3": ["audio/mpeg"], ".wav": ["audio/wav"], ".ogg": ["audio/ogg"]},
+                            on_drop=MassloopState.handle_upload,
+                            border="none",
+                            background="transparent",
+                        ),
                         rx.button(
-                            "▶ LATEST FROM GH",
+                            "💾 FROM QUEUE",
                             on_click=MassloopState.fetch_latest_generated,
                             variant="outline",
                             border=f"1px solid {GREEN}44",
@@ -171,6 +189,35 @@ def performance_page() -> rx.Component:
                     ),
 
                     rx.divider(border_color=f"{GREEN}22", margin="0.5rem 0"),
+
+                    # Generation progress (shown while generating)
+                    rx.cond(
+                        MassloopState.is_generating,
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text("🎵", font_size="2"),
+                                rx.text(
+                                    MassloopState.last_generated_status.to_string(),
+                                    color=AMBER, font_size="1", font_weight="600",
+                                ),
+                                spacing="2",
+                            ),
+                            rx.text(
+                                "stage: " + MassloopState.generation_stage.to_string(),
+                                color=f"{GREEN}88", font_size="1",
+                            ),
+                            rx.box(
+                                height="4px",
+                                width="100%",
+                                background=f"{GREEN}22",
+                                position="relative",
+                                overflow="hidden",
+                            ),
+                            width="100%",
+                            align_items="start",
+                            spacing="1",
+                        ),
+                    ),
 
                     # Audio player or empty state
                     rx.cond(
@@ -189,7 +236,15 @@ def performance_page() -> rx.Component:
                             width="100%",
                             align_items="start",
                         ),
-                        rx.text("No track yet", color=GRAY, font_size="2"),
+                        rx.vstack(
+                            rx.text("No track yet", color=GRAY, font_size="2"),
+                            rx.cond(
+                                MassloopState.is_generating,
+                                rx.text("🎧 generating... stand by", color=AMBER, font_size="1"),
+                            ),
+                            align_items="center",
+                            spacing="1",
+                        ),
                     ),
 
                     rx.text(
@@ -243,9 +298,18 @@ def performance_page() -> rx.Component:
                             width="100%",
                         ),
                         rx.button(
-                            "SEND",
+                            rx.cond(
+                                MassloopState.is_chatting,
+                                "⏳",
+                                "SEND"
+                            ),
                             on_click=MassloopState.send_chat,
-                            background_color=GREEN,
+                            is_disabled=MassloopState.is_chatting,
+                            background_color=rx.cond(
+                                MassloopState.is_chatting,
+                                "#333",
+                                GREEN,
+                            ),
                             color=BLACK,
                             font_weight="700",
                             font_size="1",

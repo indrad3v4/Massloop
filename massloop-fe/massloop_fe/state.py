@@ -59,6 +59,8 @@ class MassloopState(rx.State):
     # ── Orchestrator chat ──
     chat_history: list[dict] = []
     chat_input: str = ""
+    is_chatting: bool = False
+    upload_feedback: str = ""
 
     @rx.var
     def chat_display(self) -> str:
@@ -282,6 +284,18 @@ class MassloopState(rx.State):
     def set_venue(self, value: str):
         self.venue = value
 
+    def handle_upload(self, files: list[rx.UploadFile]):
+        """Handle uploaded audio file from local computer."""
+        if not files:
+            self.upload_feedback = "no file selected"
+            return
+        file = files[0]
+        self.upload_feedback = f"loaded: {file.filename}"
+        # Store as data URI for the audio player
+        self.audio_url = rx.get_upload_url(file.filename)
+        self.last_generated_id = f"local: {file.filename}"
+        self.last_generated_status = "📂 loaded from computer"
+
     def set_bpm(self, value: list[float]):
         try:
             self.bpm = int(value[0]) if value else self.bpm
@@ -394,27 +408,43 @@ class MassloopState(rx.State):
 
     async def send_chat(self):
         import httpx
-        self.chat_history.append({"role": "user", "text": self.chat_input})
+        user_msg = self.chat_input
+        if not user_msg.strip():
+            return
+        self.chat_history.append({"role": "user", "text": user_msg})
+        self.chat_history.append({"role": "orchestrator", "text": "⏳ thinking..."})
+        self.is_chatting = True
+        self.chat_input = ""
+        yield
         try:
             async with httpx.AsyncClient() as c:
                 r = await c.post(
                     f"{BACKEND_URL}/api/chat/orchestrator",
                     json={
-                        "message": self.chat_input,
+                        "message": user_msg,
                         "context": {"bpm": self.bpm, "energy": self.energy},
                     },
-                    timeout=10,
+                    timeout=60,
                 )
                 data = r.json()
-                self.chat_history.append({"role": "orchestrator", "text": data.get("reply", "")})
+                # Replace the "thinking..." placeholder with actual response
+                reply = data.get("reply", "")
+                self.chat_history[-1] = {"role": "orchestrator", "text": reply}
                 action = data.get("action")
                 if action == "bump_bpm":
                     self.increment_bpm()
                 elif action == "bump_energy":
                     self.increment_energy()
+                # If orchestrator replied with generation prompt, auto-trigger
+                if data.get("auto_generate"):
+                    self.last_generated_status = "🎵 generating from your prompt..."
+                    self.generation_stage = "director"
+                    self.is_generating = True
+                    # Add stage progress to chat
+                    self.chat_history.append({"role": "orchestrator", "text": "🎛️ agents working on your track..."})
         except Exception as e:
-            self.chat_history.append({"role": "orchestrator", "text": f"ERR: {e}"})
-        self.chat_input = ""
+            self.chat_history[-1] = {"role": "orchestrator", "text": f"ERR: {str(e)[:60]}"}
+        self.is_chatting = False
 
     def start(self):
         return rx.redirect("/mix-trial")
