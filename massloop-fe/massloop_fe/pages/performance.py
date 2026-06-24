@@ -572,6 +572,26 @@ def performance_page() -> rx.Component:
                     rx.text("$ hotkeys", color=SLATE, font_size="1"),
                     rx.text("n: next track  ·  +/-: energy  ·  b: bump BPM  ·  space: play/pause",
                             color=f"{WHITE}aa", font_size="1"),
+                    rx.html(
+                        "<script>"
+                        "document.addEventListener('keydown',function(e){"
+                        "var t=e.target;"
+                        "if(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='TEXTAREA')return;"
+                        "if(e.key==='n'){"
+                        "var b=document.querySelector('button');"
+                        "if(b&&b.textContent.includes('GENERATE'))b.click();"
+                        "}else if(e.key==='+'||e.key==='='){"
+                        "document.querySelectorAll('button').forEach(function(bn){if(bn.textContent.includes('+E'))bn.click();});"
+                        "}else if(e.key==='-'){"
+                        "document.querySelectorAll('button').forEach(function(bn){if(bn.textContent.includes('-E'))bn.click();});"
+                        "}else if(e.key==='b'||e.key==='B'){"
+                        "document.querySelectorAll('button').forEach(function(bn){if(bn.textContent.includes('+B'))bn.click();});"
+                        "}else if(e.key===' '){"
+                        "var a=document.querySelector('audio');if(a){a.paused?a.play():a.pause();e.preventDefault();}"
+                        "}"
+                        "});"
+                        "</script>",
+                    ),
                     align_items="start",
                 ),
                 width="90%",

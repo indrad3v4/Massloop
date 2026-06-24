@@ -247,12 +247,14 @@ class MassloopState(rx.State):
                     self.generation_stage = "failed"
                     self.last_generated_status = f"❌ {data.get('error', 'unknown error')}"
                     self.is_generating = False
+                    yield
                     return
 
                 if status == "complete" or stage == "ready":
                     self.generation_stage = "ready"
                     self.last_generated_status = "✅ ready"
                     self.is_generating = False
+                    yield  # flush ready state
                     # Load audio via result endpoint
                     r = await client.get(
                         f"{BACKEND_URL}/api/performance/result/{self.generation_task_id}",
@@ -265,14 +267,18 @@ class MassloopState(rx.State):
                         if raw_url and not raw_url.startswith("http"):
                             raw_url = f"{BACKEND_URL}{raw_url}"
                         self.audio_url = raw_url
+                        self.last_generated_status = "✅ playing now"
+                    yield  # flush audio_url to player
                     return
 
                 # Still processing — update stage label
                 self.generation_stage = stage
                 self.last_generated_status = self.STAGE_LABELS.get(stage, f"⏳ {stage}...")
+                yield  # flush stage update to UI
 
             except Exception as e:
                 self.last_generated_status = f"poll error: {str(e)[:30]}"
+                yield
                 await asyncio.sleep(2)
 
     async def handle_generate(self):
