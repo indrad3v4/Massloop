@@ -191,15 +191,8 @@ def artist_sound_page() -> rx.Component:
                                         rx.text(t.style, color=SLATE, font_size="0.85"),
                                         spacing="0",
                                     ),
-                                    rx.spacer(),
-                                    rx.cond(
-                                        t.rating > 0,
-                                        rx.text("★" * t.rating, color=AMBER, font_size="1"),
-                                    ),
                                     rx.button(
-                                        "▶",
-                                        on_click=lambda: MassloopState.load_track(t.task_id),
-                                        variant="outline",
+                                        "▶", variant="outline",
                                         border=f"1px solid {GREEN}44",
                                         color=GREEN, font_size="1",
                                         padding="2px 8px",
