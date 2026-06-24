@@ -8,7 +8,8 @@ from loguru import logger
 from pydantic import BaseModel
 
 from app.orchestrator import MusicOrchestratorAgent
-
+from ..services.artist_memory import learn_from_chat, build_artist_context
+from ..services.reasoning_store import create_session, append_reasoning, set_done, get_reasoning
 router = APIRouter(prefix="/api/chat", tags=["orchestrator"])
 
 # Lazy-init — will be wired in main.py
@@ -31,6 +32,7 @@ class ChatResponse(BaseModel):
     reply: str = ""
     action: str | None = None
     auto_generate: bool = False
+    session_id: str = ""
 
 
 # ── Fallback suggestions (used when orchestrator is unavailable) ──
@@ -119,14 +121,23 @@ async def orchestrator_chat(req: ChatRequest):
     """LLM-powered orchestrator chat — uses MusicOrchestratorAgent when available."""
     msg = req.message.lower().strip()
     context = req.context or {}
-
-    # Artist brand identity — prefer request-level field, fall back to context
     artist_brand = req.artist_brand or context.get("artist_brand", {})
+
+    # Create reasoning session for real-time tracking
+    session_id = create_session()
+    append_reasoning(session_id, "🎵 analyzing your request...")
 
     # If orchestrator is not initialized, fall back to rule-based
     if _orchestrator is None:
         logger.info("Orchestrator agent unavailable — using rule-based fallback")
-        return _fallback_chat(msg, context, artist_brand=artist_brand or None)
+        result = _fallback_chat(msg, context, artist_brand=artist_brand or None)
+        set_done(session_id, reply=result.reply, auto_generate=result.auto_generate)
+        return ChatResponse(
+            reply=result.reply,
+            action=result.action,
+            auto_generate=result.auto_generate,
+            session_id=session_id,
+        )
 
     # Extract parameters from context with sensible defaults
     bpm = context.get("bpm", 140)
@@ -141,7 +152,8 @@ async def orchestrator_chat(req: ChatRequest):
         logger.info(f"Artist brand identity present: {artist_brand.get('artist_name', '(unnamed)')}")
 
     try:
-        # Run the agent with a 55-second timeout (leaving 5s for response formatting)
+        # Run the agent with reasoning tracking
+        append_reasoning(session_id, "🧠 calling orchestrator agent...")
         result = await asyncio.wait_for(
             _orchestrator.decide_and_generate(
                 bpm=bpm,
@@ -200,3 +212,17 @@ async def orchestrator_chat(req: ChatRequest):
             reply=f"🤖 orchestrator encountered an issue: {str(e)[:100]}",
             auto_generate=False,
         )
+
+
+@router.get("/reasoning/{session_id}")
+def get_reasoning_endpoint(session_id: str):
+    """Poll endpoint for real-time reasoning updates."""
+    data = get_reasoning(session_id)
+    if data is None:
+        return {"reasoning": [], "done": False, "reply": "", "error": "session not found"}
+    return {
+        "reasoning": data["reasoning"],
+        "done": data["done"],
+        "reply": data["reply"][:500],
+        "auto_generate": data["auto_generate"],
+    }

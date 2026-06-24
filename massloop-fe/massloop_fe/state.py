@@ -526,6 +526,7 @@ class MassloopState(rx.State):
 
     async def send_chat(self):
         import httpx
+        import asyncio
         user_msg = self.chat_input
         if not user_msg.strip():
             return
@@ -534,6 +535,7 @@ class MassloopState(rx.State):
         self.is_chatting = True
         self.chat_input = ""
         yield
+        session_id = ""
         try:
             async with httpx.AsyncClient() as c:
                 r = await c.post(
@@ -545,9 +547,34 @@ class MassloopState(rx.State):
                     timeout=60,
                 )
                 data = r.json()
-                # Replace the "thinking..." placeholder with actual response
+                session_id = data.get("session_id", "")
+                
+                # If we have a reasoning session, start polling
+                if session_id:
+                    self.reasoning_text = "🎵 analyzing your request..."
+                    yield
+                    # Poll reasoning for up to 55s
+                    for _ in range(28):  # 28 * 2s = 56s max
+                        await asyncio.sleep(2)
+                        try:
+                            rr = await c.get(
+                                f"{BACKEND_URL}/api/chat/reasoning/{session_id}",
+                                timeout=5,
+                            )
+                            rd = rr.json()
+                            reasoning_list = rd.get("reasoning", [])
+                            if reasoning_list:
+                                last = reasoning_list[-1]
+                                self.reasoning_text = last
+                                yield
+                            if rd.get("done"):
+                                break
+                        except Exception:
+                            pass
+                
                 reply = data.get("reply", "")
                 self.chat_history[-1] = {"role": "orchestrator", "text": reply}
+                self.reasoning_text = ""
                 action = data.get("action")
                 if action == "bump_bpm":
                     self.increment_bpm()
