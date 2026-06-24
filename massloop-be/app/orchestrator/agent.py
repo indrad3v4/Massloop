@@ -79,6 +79,7 @@ class MusicOrchestratorAgent:
         style: str,
         theme: str = "",
         crowd_energy: float = 0.5,
+        artist_brand: dict | None = None,
     ) -> dict:
         """
         Run the orchestrator to decide and generate a track.
@@ -93,6 +94,7 @@ class MusicOrchestratorAgent:
             style=style,
             theme=theme,
             crowd_energy=crowd_energy,
+            artist_brand=artist_brand,
         )
 
         prompt = (

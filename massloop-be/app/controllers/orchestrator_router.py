@@ -24,6 +24,7 @@ def set_orchestrator(orch: MusicOrchestratorAgent):
 class ChatRequest(BaseModel):
     message: str = ""
     context: dict = {}
+    artist_brand: dict = {}
 
 
 class ChatResponse(BaseModel):
@@ -43,11 +44,20 @@ _SUGGESTIONS = [
 ]
 
 
-def _fallback_chat(msg: str, context: dict) -> ChatResponse:
+def _fallback_chat(msg: str, context: dict, artist_brand: dict | None = None) -> ChatResponse:
     """Rule-based fallback when the LLM orchestrator is not available."""
     msg_lower = msg.lower().strip()
     bpm = context.get("bpm", 140)
     energy = context.get("energy", 0.7)
+
+    # Pull artist brand fields for smarter fallback responses
+    brand_genre = None
+    brand_name = None
+    brand_signature = None
+    if artist_brand:
+        brand_name = (artist_brand.get("artist_name") or "").strip()
+        brand_genre = (artist_brand.get("artist_genre") or "").strip()
+        brand_signature = (artist_brand.get("artist_signature") or "").strip()
 
     if "energy" in msg_lower or "bpm" in msg_lower or "tempo" in msg_lower:
         if "energy" in msg_lower:
@@ -72,6 +82,10 @@ def _fallback_chat(msg: str, context: dict) -> ChatResponse:
             reply="breakdown time — mute the kick, let the pad breathe, 32 bars then re-enter",
         )
     if "style" in msg_lower or "genre" in msg_lower:
+        if brand_genre:
+            return ChatResponse(
+                reply=f"locked on {brand_genre.upper()} — working within your signature style 🎯",
+            )
         return ChatResponse(
             reply="switching to ACID_TECHNO — 303 squelch, hardgroove percussion, industrial edge",
         )
@@ -87,6 +101,14 @@ def _fallback_chat(msg: str, context: dict) -> ChatResponse:
         return ChatResponse(
             reply="HARDGROOVE — syncopated percussion, rolling bass, 135 BPM sweet spot",
         )
+    if brand_name and brand_signature:
+        return ChatResponse(
+            reply=f"{brand_name} — {random.choice(_SUGGESTIONS)} ({brand_signature[:60]})",
+        )
+    if brand_name:
+        return ChatResponse(
+            reply=f"{brand_name} — {random.choice(_SUGGESTIONS)}",
+        )
     return ChatResponse(
         reply=f"got it — {random.choice(_SUGGESTIONS)}",
     )
@@ -98,10 +120,13 @@ async def orchestrator_chat(req: ChatRequest):
     msg = req.message.lower().strip()
     context = req.context or {}
 
+    # Artist brand identity — prefer request-level field, fall back to context
+    artist_brand = req.artist_brand or context.get("artist_brand", {})
+
     # If orchestrator is not initialized, fall back to rule-based
     if _orchestrator is None:
         logger.info("Orchestrator agent unavailable — using rule-based fallback")
-        return _fallback_chat(msg, context)
+        return _fallback_chat(msg, context, artist_brand=artist_brand or None)
 
     # Extract parameters from context with sensible defaults
     bpm = context.get("bpm", 140)
@@ -112,6 +137,8 @@ async def orchestrator_chat(req: ChatRequest):
     crowd_energy = context.get("crowd_energy", 0.5)
 
     logger.info(f"Orchestrator chat: bpm={bpm}, energy={energy}, venue={venue}, style={style}")
+    if artist_brand:
+        logger.info(f"Artist brand identity present: {artist_brand.get('artist_name', '(unnamed)')}")
 
     try:
         # Run the agent with a 55-second timeout (leaving 5s for response formatting)
@@ -123,6 +150,7 @@ async def orchestrator_chat(req: ChatRequest):
                 style=style,
                 theme=theme,
                 crowd_energy=crowd_energy,
+                artist_brand=artist_brand or None,
             ),
             timeout=55,
         )

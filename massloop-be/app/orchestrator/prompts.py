@@ -47,6 +47,7 @@ def build_orchestrator_context(
     style: str,
     theme: str = "",
     crowd_energy: float = 0.5,
+    artist_brand: dict | None = None,
 ) -> str:
     """Build a concise context string for the orchestrator agent."""
     lines = [
@@ -58,4 +59,33 @@ def build_orchestrator_context(
     ]
     if theme:
         lines.append(f"Theme: {theme}")
+
+    # Inject artist brand identity if provided
+    if artist_brand:
+        name = artist_brand.get("artist_name", "") or artist_brand.get("name", "")
+        genre = artist_brand.get("artist_genre", "") or artist_brand.get("genre", "")
+        signature = artist_brand.get("artist_signature", "") or artist_brand.get("signature", "")
+        tone = artist_brand.get("artist_tone", "") or artist_brand.get("tone", "")
+        negative_tags = artist_brand.get("artist_negative_tags", "") or artist_brand.get("negative_tags", "")
+        bpm_min = artist_brand.get("artist_bpm_min")
+        bpm_max = artist_brand.get("artist_bpm_max")
+
+        lines.append("")
+        lines.append("--- Artist Identity ---")
+        if name:
+            lines.append(f"Artist: {name}")
+        if genre:
+            lines.append(f"Genre: {genre}")
+        if signature:
+            lines.append(f"Signature sound: {signature}")
+        if tone:
+            lines.append(f"Tone: {tone}")
+        if negative_tags:
+            lines.append(f"Avoid: {negative_tags}")
+        if bpm_min is not None or bpm_max is not None:
+            bpm_min_str = str(bpm_min) if bpm_min is not None else "?"
+            bpm_max_str = str(bpm_max) if bpm_max is not None else "?"
+            lines.append(f"BPM range: {bpm_min_str}-{bpm_max_str}")
+        lines.append("")
+
     return "\n".join(lines)
