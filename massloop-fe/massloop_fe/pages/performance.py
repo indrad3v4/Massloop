@@ -165,7 +165,7 @@ def performance_page() -> rx.Component:
                                 color=PINK,
                                 font_size="1",
                                 font_weight="600",
-                                padding="4px 12px",
+                                padding="2px 8px",
                                 _hover={"background_color": f"{PINK}22"},
                             ),
                             multiple=False,
@@ -336,6 +336,7 @@ def performance_page() -> rx.Component:
                         rx.input(
                             value=MassloopState.chat_input,
                             on_change=MassloopState.set_chat_input,
+                            on_key_down=MassloopState.handle_enter_key,
                             placeholder="tell the orchestrator...",
                             background_color="#0a0a0a",
                             border=f"1px solid {GREEN}44",
@@ -603,5 +604,9 @@ def performance_page() -> rx.Component:
             min_height="100vh",
             background_color=BLACK,
             align_items="center",
+            height="100vh",
+            overflow="hidden",
+            padding="0",
+            spacing="1",
         ),
     )
