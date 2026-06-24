@@ -95,7 +95,7 @@ def artist_sound_page() -> rx.Component:
                     rx.hstack(
                         rx.slider(
                             min=0, max=100, step=5,
-                            default_value=MassloopState.artist_energy_pct.to_int(),
+                            default_value=MassloopState.artist_energy_pct,
                             on_change=MassloopState.set_artist_energy,
                             width="80%", color_scheme="green",
                         ),
