@@ -44,6 +44,7 @@ orchestrator = None
 if os.getenv("OPENAI_API_KEY"):
     orchestrator = MusicOrchestratorAgent()
     set_orchestrator(orchestrator)
+    set_router_orchestrator(orchestrator)
     logger.info("Orchestrator agent initialized")
 else:
     logger.info("OPENAI_API_KEY not set — orchestrator disabled (mock mode)")

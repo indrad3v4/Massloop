@@ -7,7 +7,9 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+import httpx
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Request
+from fastapi.responses import StreamingResponse
 from loguru import logger
 from pydantic import BaseModel
 
@@ -332,6 +334,61 @@ async def auto_commit(background_tasks: BackgroundTasks):
         "id": task_id,
         "message": "Generation auto-triggered (commit flow)",
     }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CHUNKED AUDIO STREAMING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@router.get("/stream/{task_id}")
+async def stream_audio(task_id: str):
+    """
+    Stream audio from a completed generation task using chunked transfer encoding.
+
+    Downloads the audio URL from CometAPI's fetch result and streams it back,
+    allowing the browser to start playing as chunks arrive instead of waiting
+    for the full download.
+
+    Args:
+        task_id: The task ID from the queue.
+    """
+    queue = _load_queue()
+    task = _find_task(queue, task_id)
+
+    if not task:
+        raise HTTPException(404, f"Task '{task_id}' not found")
+
+    if task.get("status") != "complete":
+        raise HTTPException(409, f"Task status is '{task['status']}', must be 'complete' to stream")
+
+    result = task.get("result") or {}
+    audio_url = result.get("audio_url")
+
+    if not audio_url:
+        raise HTTPException(404, "No audio URL found for this task")
+
+    async def _audio_streamer():
+        """Generator that yields audio chunks from the remote URL."""
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                async with client.stream("GET", audio_url) as response:
+                    response.raise_for_status()
+                    async for chunk in response.aiter_bytes(chunk_size=65536):
+                        yield chunk
+        except Exception as e:
+            logger.error(f"Stream error for {audio_url}: {e}")
+            # Yield nothing — the stream just ends
+            return
+
+    return StreamingResponse(
+        _audio_streamer(),
+        media_type="audio/mpeg",
+        headers={
+            "Content-Disposition": f'inline; filename="massloop_{task_id}.mp3"',
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "no-cache",
+        },
+    )
 
 
 @router.get("/buffer_health")

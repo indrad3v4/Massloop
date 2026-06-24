@@ -62,7 +62,6 @@ class MassloopState(rx.State):
     is_chatting: bool = False
     upload_feedback: str = ""
     reasoning_text: str = ""
-    stream_url: str = ""
 
     @rx.var
     def chat_display(self) -> str:
@@ -110,6 +109,13 @@ class MassloopState(rx.State):
     generation_stage: str = ""
     generation_task_id: str = ""
     is_generating: bool = False
+
+    @rx.var
+    def stream_url(self) -> str:
+        """URL for chunked audio streaming endpoint — enables progressive playback."""
+        if not self.generation_task_id:
+            return ""
+        return f"{BACKEND_URL}/api/performance/stream/{self.generation_task_id}"
 
     STAGE_LABELS = {
         "queued":   "⏳ in queue — waiting for orchestrator...",
@@ -442,10 +448,10 @@ class MassloopState(rx.State):
                     self.last_generated_status = "🎵 generating from your prompt..."
                     self.generation_stage = "director"
                     self.is_generating = True
-                    # Set streaming URL for near-real-time playback
+                    # Set task_id so stream_url computed property auto-updates
                     task_id = data.get("task_id", "")
                     if task_id:
-                        self.stream_url = f"{BACKEND_URL}/api/performance/stream/{task_id}"
+                        self.generation_task_id = task_id
                     # Add stage progress to chat
                     self.chat_history.append({"role": "orchestrator", "text": "🎛️ agents working on your track..."})
         except Exception as e:
