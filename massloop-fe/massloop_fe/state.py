@@ -5,7 +5,80 @@ BACKEND_URL = os.getenv("BACKEND_URL") or "https://massloop-be-production.up.rai
 
 
 class MassloopState(rx.State):
-    # ── Energy controls ──
+    # ── Artist Brand Setters ──
+    def set_artist_name(self, v: str): self.artist_name = v
+    def set_artist_genre(self, v: str): self.artist_genre = v
+    def set_artist_bpm_min(self, v: int): self.artist_bpm_min = v
+    def set_artist_bpm_max(self, v: int): self.artist_bpm_max = v
+    def set_artist_signature(self, v: str): self.artist_signature = v
+    def set_artist_tone(self, v: str): self.artist_tone = v
+    def set_artist_negative_tags(self, v: str): self.artist_negative_tags = v
+    def set_artist_energy(self, v: list[float]):
+        try:
+            self.artist_energy = int(v[0]) if v else self.artist_energy
+        except (ValueError, IndexError):
+            pass
+
+    def save_artist_brand(self):
+        """Save the artist's sound profile and mark as saved."""
+        self.artist_saved = True
+        # Update live performance defaults to match artist brand
+        default_bpm = (self.artist_bpm_min + self.artist_bpm_max) // 2
+        if default_bpm > 0:
+            self.bpm = default_bpm
+        self.style = self.artist_genre
+        self.energy = self.artist_energy / 100.0
+
+    def rate_track(self, task_id: str, rating: int):
+        """Rate a generated track (1-5)."""
+        self.track_ratings[task_id] = max(1, min(5, rating))
+        for t in self.track_history:
+            if t.get("task_id") == task_id:
+                t["rating"] = rating
+
+    def approve_artist_track(self, task_id: str):
+        """Mark track as approved (sounds like the artist)."""
+        for t in self.track_history:
+            if t.get("task_id") == task_id:
+                t["approved"] = True
+                break
+
+    def reject_artist_track(self, task_id: str):
+        """Mark track as rejected (doesn't sound like the artist)."""
+        for t in self.track_history:
+            if t.get("task_id") == task_id:
+                t["approved"] = False
+                break
+
+    def load_track_from_history(self, task_id: str):
+        """Load a track from history into the audio deck."""
+        self.generation_task_id = task_id
+        for t in self.track_history:
+            if t.get("task_id") == task_id:
+                self.last_generated_id = task_id
+                self.last_generated_status = "📂 loading..."
+                return MassloopState.fetch_track_by_id(task_id)
+        self.last_generated_status = "track not found"
+        return None
+
+    async def fetch_track_by_id(self, task_id: str):
+        """Fetch a specific track's audio URL."""
+        import httpx
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.get(
+                    f"{BACKEND_URL}/api/performance/result/{task_id}", timeout=10
+                )
+                if r.status_code == 200:
+                    result = r.json().get("result") or {}
+                    raw_url = result.get("audio_url", "")
+                    if raw_url and not raw_url.startswith("http"):
+                        raw_url = f"{BACKEND_URL}{raw_url}"
+                    self.audio_url = raw_url
+                    self.last_generated_id = task_id
+                    self.last_generated_status = "✅ loaded from history"
+        except Exception as e:
+            self.last_generated_status = f"error: {str(e)[:40]}"
     def decrement_energy(self):
         """Decrease energy by 0.1, not going below 0.1."""
         self.energy = max(0.1, self.energy - 0.1)
@@ -45,6 +118,27 @@ class MassloopState(rx.State):
 
     # ── User Journey ──
     first_visit: bool = True
+
+    # ── Artist Brand Identity ──
+    artist_name: str = ""
+    artist_genre: str = "TECHNO"
+    artist_bpm_min: int = 120
+    artist_bpm_max: int = 160
+    artist_signature: str = ""
+    artist_energy: int = 70
+    artist_tone: str = "DARK"
+    artist_negative_tags: str = ""
+    artist_saved: bool = False
+    track_history: list[dict] = []
+    track_ratings: dict[str, int] = {}
+
+    @rx.var
+    def artist_energy_pct(self) -> int:
+        return max(0, min(100, self.artist_energy))
+
+    @rx.var
+    def has_track_history(self) -> bool:
+        return len(self.track_history) > 0
 
     async def check_first_visit(self):
         """Redirect returning users straight to the stage."""

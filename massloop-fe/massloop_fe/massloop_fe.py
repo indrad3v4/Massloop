@@ -4,9 +4,10 @@ from .pages import (
     landing_page, 
     onboard_page, 
     library_page, 
-    performance_page, 
+    performance_page,
     health_check, 
-    mix_trial_page
+    mix_trial_page,
+    artist_sound_page,
 )
 
 # ── Rave aesthetic palette (suckpuck inspo) ──
@@ -36,5 +37,6 @@ app.add_page(index, route="/", title="Massloop · landing")
 app.add_page(onboard_page, route="/onboard", title="Massloop · onboarding")
 app.add_page(library_page, route="/library", title="Massloop · library")
 app.add_page(performance_page, route="/stage", title="Massloop · live")
+app.add_page(artist_sound_page, route="/my-sound", title="Massloop · my sound")
 app.add_page(health_check, route="/health", title="Massloop · health")
 app.add_page(mix_trial_page, route="/mix-trial", title="Massloop · mix trial")

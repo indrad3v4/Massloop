@@ -219,7 +219,7 @@ def performance_page() -> rx.Component:
                         ),
                     ),
 
-                    # Audio player or empty state
+                    # Audio player (supports streaming + completed tracks)
                     rx.cond(
                         MassloopState.audio_url != "",
                         rx.vstack(
@@ -228,6 +228,31 @@ def performance_page() -> rx.Component:
                                 src=MassloopState.audio_url.to_string(),
                                 width="100%",
                                 auto_play=True,
+                            ),
+                            # Approval panel (HITL)
+                            rx.hstack(
+                                rx.button(
+                                    "👍 MY SOUND",
+                                    on_click=MassloopState.approve_artist_track(
+                                        MassloopState.last_generated_id
+                                    ),
+                                    variant="outline",
+                                    border=f"1px solid {GREEN}44",
+                                    color=GREEN, font_size="1",
+                                    _hover={"background_color": f"{GREEN}22"},
+                                ),
+                                rx.button(
+                                    "👎 NOT ME",
+                                    on_click=MassloopState.reject_artist_track(
+                                        MassloopState.last_generated_id
+                                    ),
+                                    variant="outline",
+                                    border=f"1px solid {RED}44",
+                                    color=RED, font_size="1",
+                                    _hover={"background_color": f"{RED}22"},
+                                ),
+                                spacing="3", width="100%", justify="center",
+                                padding="4px 0",
                             ),
                             rx.text(
                                 "now: " + MassloopState.last_generated_id.to_string(),

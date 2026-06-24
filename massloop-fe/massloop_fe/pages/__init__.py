@@ -6,6 +6,7 @@ from .library import library_page
 from .performance import performance_page
 from .health import health_check
 from .mix_trial_page import mix_trial_page
+from .my_sound import artist_sound_page
 
 __all__ = [
     "index",
@@ -15,4 +16,5 @@ __all__ = [
     "performance_page",
     "health_check",
     "mix_trial_page",
+    "artist_sound_page",
 ]
