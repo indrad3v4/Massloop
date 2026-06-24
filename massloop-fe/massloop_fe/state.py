@@ -61,6 +61,8 @@ class MassloopState(rx.State):
     chat_input: str = ""
     is_chatting: bool = False
     upload_feedback: str = ""
+    reasoning_text: str = ""
+    stream_url: str = ""
 
     @rx.var
     def chat_display(self) -> str:
@@ -440,6 +442,10 @@ class MassloopState(rx.State):
                     self.last_generated_status = "🎵 generating from your prompt..."
                     self.generation_stage = "director"
                     self.is_generating = True
+                    # Set streaming URL for near-real-time playback
+                    task_id = data.get("task_id", "")
+                    if task_id:
+                        self.stream_url = f"{BACKEND_URL}/api/performance/stream/{task_id}"
                     # Add stage progress to chat
                     self.chat_history.append({"role": "orchestrator", "text": "🎛️ agents working on your track..."})
         except Exception as e:

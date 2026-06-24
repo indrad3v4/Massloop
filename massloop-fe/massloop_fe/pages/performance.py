@@ -227,6 +227,7 @@ def performance_page() -> rx.Component:
                                 controls=True,
                                 src=MassloopState.audio_url.to_string(),
                                 width="100%",
+                                auto_play=True,
                             ),
                             rx.text(
                                 "now: " + MassloopState.last_generated_id.to_string(),
@@ -261,11 +262,31 @@ def performance_page() -> rx.Component:
                 margin_top="1rem",
             ),
 
-            # ═══ Orchestrator Chat ═══
+            # ═══ Orchestrator Chat + Reasoning ═══
             terminal_box(
                 rx.vstack(
                     rx.text("> orchestrator", color=GREEN, font_size="1"),
                     rx.divider(border_color=f"{GREEN}22", margin="0.5rem 0"),
+
+                    # Reasoning panel (real-time)
+                    rx.cond(
+                        MassloopState.reasoning_text != "",
+                        rx.box(
+                            rx.text("🤖 reasoning", color=PINK, font_size="1", font_weight="600"),
+                            rx.text(
+                                MassloopState.reasoning_text.to_string(),
+                                color=WHITE, font_size="0.85", font_family="monospace",
+                                white_space="pre-wrap",
+                                padding="4px 8px",
+                                background="#0d0d0d",
+                                border=f"1px solid {PINK}33",
+                                border_radius="4px",
+                            ),
+                            width="100%",
+                            spacing="1",
+                            margin_bottom="0.5rem",
+                        ),
+                    ),
 
                     # Chat history (uses computed var to avoid rx.foreach on list[dict])
                     rx.cond(

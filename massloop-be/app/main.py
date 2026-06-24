@@ -10,7 +10,7 @@ from app.controllers.performance_router import router as performance_router, set
 from app.controllers.profile_router import router as profile_router
 from app.controllers.stripe_router import router as stripe_router
 from app.controllers.trial_router import router as trial_router
-from app.controllers.orchestrator_router import router as orchestrator_router
+from app.controllers.orchestrator_router import router as orchestrator_router, set_orchestrator as set_router_orchestrator
 from app.orchestrator import MusicOrchestratorAgent
 
 # ── Production env validation ──
