@@ -518,9 +518,8 @@ class MassloopState(rx.State):
     def set_chat_input(self, value: str):
         self.chat_input = value
 
-    def handle_enter_key(self, key_event: dict):
+    def handle_enter_key(self, key: str):
         """Trigger send_chat when Enter is pressed on the chat input."""
-        key = key_event.get("key", "")
         if key == "Enter":
             return MassloopState.send_chat
 
