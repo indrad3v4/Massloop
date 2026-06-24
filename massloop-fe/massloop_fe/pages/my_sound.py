@@ -62,14 +62,14 @@ def artist_sound_page() -> rx.Component:
                     rx.hstack(
                         rx.input(
                             value=MassloopState.artist_bpm_min.to_string(),
-                            on_change=lambda v: MassloopState.set_bpm_min(int(v) if v.isdigit() else 120),
+                            on_change=lambda v: MassloopState.set_artist_bpm_min(int(v) if v.isdigit() else 120),
                             placeholder="120", width="48%",
                             background_color="#0a0a0a", border=f"1px solid {GREEN}44", color=GREEN,
                         ),
                         rx.text("to", color=SLATE),
                         rx.input(
                             value=MassloopState.artist_bpm_max.to_string(),
-                            on_change=lambda v: MassloopState.set_bpm_max(int(v) if v.isdigit() else 160),
+                            on_change=lambda v: MassloopState.set_artist_bpm_max(int(v) if v.isdigit() else 160),
                             placeholder="160", width="48%",
                             background_color="#0a0a0a", border=f"1px solid {GREEN}44", color=GREEN,
                         ),
