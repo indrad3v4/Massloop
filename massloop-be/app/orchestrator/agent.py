@@ -112,12 +112,21 @@ class MusicOrchestratorAgent:
             # Try to extract audio_url from the agent's final text
             audio_url = None
             task_id = None
+            import re
             for line in output.splitlines():
                 lower = line.lower()
                 if "audio_url" in lower or "audio url" in lower:
-                    audio_url = line.split(":", 1)[-1].strip()
+                    raw = line.split(":", 1)[-1].strip()
+                    # Handle Markdown link syntax: [text](url)
+                    m = re.search(r'\]\(([^)]+)\)', raw)
+                    if m:
+                        audio_url = m.group(1)
+                    else:
+                        audio_url = raw
                 if "task_id" in lower or "task id" in lower:
-                    task_id = line.split(":", 1)[-1].strip()
+                    tid = line.split(":", 1)[-1].strip()
+                    if tid and tid != "null" and tid != "None":
+                        task_id = tid
 
             return {
                 "decision": "generate",

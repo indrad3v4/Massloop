@@ -18,6 +18,7 @@ from app.controllers.usecases import (
 )
 from app.models.entities import ArtistProfile, UndergroundStyle, VenueType
 from app.orchestrator.tools import generate_track, poll_track, get_style_suggestions
+import re
 
 router = APIRouter(prefix="/api/performance", tags=["performance"])
 
@@ -276,10 +277,15 @@ async def _run_approved_generation(task_id: str):
             task["stage"] = "failed"
             task["error"] = result["error"]
         else:
+            raw_url = result.get("audio_url", "")
+            # Clean Markdown link syntax if LLM returned [text](url)
+            md_match = re.search(r'\]\(([^)]+)\)', raw_url)
+            if md_match:
+                raw_url = md_match.group(1)
             task["status"] = "complete"
             task["stage"] = "ready"
             task["result"] = {
-                "audio_url": result.get("audio_url"),
+                "audio_url": raw_url,
                 "task_id": result.get("task_id"),
                 "agent_output": result.get("agent_output"),
             }
