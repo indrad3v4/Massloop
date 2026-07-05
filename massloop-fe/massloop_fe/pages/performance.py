@@ -219,13 +219,13 @@ def performance_page() -> rx.Component:
                         ),
                     ),
 
-                    # Audio player (supports streaming + completed tracks)
+                    # Audio player (uses backend stream proxy to avoid CORS/autoplay issues)
                     rx.cond(
                         MassloopState.audio_url != "",
                         rx.vstack(
                             rx.audio(
                                 controls=True,
-                                src=MassloopState.audio_url.to_string(),
+                                src=MassloopState.stream_url.to_string(),
                                 width="100%",
                                 auto_play=True,
                             ),
