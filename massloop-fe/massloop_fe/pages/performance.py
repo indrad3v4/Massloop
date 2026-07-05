@@ -219,15 +219,37 @@ def performance_page() -> rx.Component:
                         ),
                     ),
 
-                    # Audio player (uses backend stream proxy to avoid CORS/autoplay issues)
+                    # Audio player (uses backend stream proxy)
                     rx.cond(
                         MassloopState.audio_url != "",
                         rx.vstack(
                             rx.audio(
+                                id="stage-audio",
                                 controls=True,
                                 src=MassloopState.stream_url.to_string(),
                                 width="100%",
                                 auto_play=True,
+                                style={"display": "block", "margin": "0.5rem 0"},
+                            ),
+                            # Big play button (visible fallback — click to start audio)
+                            rx.hstack(
+                                rx.button(
+                                    "▶ PLAY",
+                                    on_click=rx.call_script(
+                                        "var a=document.getElementById('stage-audio');"
+                                        "if(a&&a.paused)a.play()"
+                                    ),
+                                    variant="outline",
+                                    border=f"2px solid {GREEN}66",
+                                    color=GREEN,
+                                    font_size="2",
+                                    font_weight="700",
+                                    padding="0.75rem 2rem",
+                                    background_color="#0a0a0a",
+                                    _hover={"background_color": f"{GREEN}22"},
+                                    width="100%",
+                                ),
+                                width="100%",
                             ),
                             # Approval panel (HITL)
                             rx.hstack(
