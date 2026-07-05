@@ -226,68 +226,16 @@ class MassloopState(rx.State):
         "failed":   "❌ generation failed",
     }
 
-    async def poll_generation(self):
-        """Poll BE every 2 seconds while generating — updates generation_stage."""
+    async def handle_generate(self):
+        """Called when user clicks GENERATE — queue → approve → poll stages (inline with timeout)."""
         import httpx
         import asyncio
-        while self.is_generating and self.generation_task_id:
-            await asyncio.sleep(2)
-            try:
-                async with httpx.AsyncClient() as client:
-                    resp = await client.get(
-                        f"{BACKEND_URL}/api/performance/status/{self.generation_task_id}",
-                        timeout=10,
-                    )
-                    data = resp.json()
 
-                stage = data.get("stage", "")
-                status = data.get("status", "")
-
-                if status == "failed":
-                    self.generation_stage = "failed"
-                    self.last_generated_status = f"❌ {data.get('error', 'unknown error')}"
-                    self.is_generating = False
-                    yield
-                    return
-
-                if status == "complete" or stage == "ready":
-                    self.generation_stage = "ready"
-                    self.last_generated_status = "✅ ready"
-                    self.is_generating = False
-                    yield  # flush ready state
-                    # Load audio via result endpoint
-                    r = await client.get(
-                        f"{BACKEND_URL}/api/performance/result/{self.generation_task_id}",
-                        timeout=10,
-                    )
-                    if r.status_code == 200:
-                        result_data = r.json().get("result") or {}
-                        raw_url = result_data.get("audio_url", "")
-                        # If URL is relative, prefix with BACKEND_URL
-                        if raw_url and not raw_url.startswith("http"):
-                            raw_url = f"{BACKEND_URL}{raw_url}"
-                        self.audio_url = raw_url
-                        self.last_generated_status = "✅ playing now"
-                    yield  # flush audio_url to player
-                    return
-
-                # Still processing — update stage label
-                self.generation_stage = stage
-                self.last_generated_status = self.STAGE_LABELS.get(stage, f"⏳ {stage}...")
-                yield  # flush stage update to UI
-
-            except Exception as e:
-                self.last_generated_status = f"poll error: {str(e)[:30]}"
-                yield
-                await asyncio.sleep(2)
-
-    async def handle_generate(self):
-        """Called when user clicks GENERATE — queue → approve → poll stages."""
-        import httpx
         self.last_generated_status = "queued..."
         self.generation_stage = "queued"
         self.is_generating = True
         self.audio_url = ""
+        yield  # flush initial state
 
         try:
             async with httpx.AsyncClient() as client:
@@ -306,6 +254,7 @@ class MassloopState(rx.State):
                 if r.status_code != 200:
                     self.last_generated_status = f"queue error: {r.status_code}"
                     self.is_generating = False
+                    yield
                     return
 
                 task_id = r.json().get("id", "")
@@ -321,16 +270,76 @@ class MassloopState(rx.State):
                 if r2.status_code != 200:
                     self.last_generated_status = f"approve error: {r2.status_code}"
                     self.is_generating = False
+                    yield
                     return
 
                 self.last_generated_status = "generating"
+                yield  # flush status
 
-            # 3. Start polling in background
-            return MassloopState.poll_generation
+                # 3. Poll inline until done, failed, or timeout (180s)
+                deadline = asyncio.get_event_loop().time() + 180
+                while self.is_generating and self.generation_task_id:
+                    if asyncio.get_event_loop().time() > deadline:
+                        self.last_generated_status = "⏰ timeout — generation took too long"
+                        self.is_generating = False
+                        yield
+                        return
+
+                    await asyncio.sleep(2)
+                    try:
+                        resp = await client.get(
+                            f"{BACKEND_URL}/api/performance/status/{self.generation_task_id}",
+                            timeout=10,
+                        )
+                        data = resp.json()
+                    except Exception as e:
+                        self.last_generated_status = f"poll error: {str(e)[:30]}"
+                        yield
+                        continue
+
+                    stage = data.get("stage", "")
+                    status = data.get("status", "")
+
+                    if status == "failed":
+                        self.generation_stage = "failed"
+                        self.last_generated_status = f"❌ {data.get('error', 'unknown error')}"
+                        self.is_generating = False
+                        yield
+                        return
+
+                    if status == "complete" or stage == "ready":
+                        self.generation_stage = "ready"
+                        self.last_generated_status = "✅ ready"
+                        self.is_generating = False
+                        yield  # flush ready, then fetch audio
+                        try:
+                            r = await client.get(
+                                f"{BACKEND_URL}/api/performance/result/{self.generation_task_id}",
+                                timeout=10,
+                            )
+                            if r.status_code == 200:
+                                result_data = r.json().get("result") or {}
+                                raw_url = result_data.get("audio_url", "")
+                                if raw_url and not raw_url.startswith("http"):
+                                    raw_url = f"{BACKEND_URL}{raw_url}"
+                                self.audio_url = raw_url
+                                self.last_generated_status = "✅ playing now"
+                            else:
+                                self.last_generated_status = f"result error: {r.status_code}"
+                        except Exception as e:
+                            self.last_generated_status = f"result error: {str(e)[:30]}"
+                        yield
+                        return
+
+                    # Still processing — update stage label
+                    self.generation_stage = stage
+                    self.last_generated_status = self.STAGE_LABELS.get(stage, f"⏳ {stage}...")
+                    yield  # flush stage update
 
         except Exception as e:
             self.last_generated_status = f"error: {str(e)[:40]}"
             self.is_generating = False
+            yield
 
     # ── Start trial (mix trial flow) ──
     async def start_trial(self):

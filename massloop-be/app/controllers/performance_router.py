@@ -17,6 +17,7 @@ from app.controllers.usecases import (
     LivePerformanceUseCase, SetupProfileUseCase, DeckStateManager
 )
 from app.models.entities import ArtistProfile, UndergroundStyle, VenueType
+from app.orchestrator.tools import generate_track, poll_track, get_style_suggestions
 
 router = APIRouter(prefix="/api/performance", tags=["performance"])
 
@@ -215,12 +216,10 @@ async def _run_approved_generation(task_id: str):
 
     try:
         params = task["params"]
-        if _orchestrator is None:
-            raise RuntimeError("Orchestrator not initialized")
 
         # ── MOA pipeline stages ──
         _set_stage(task_id, "director")
-        await asyncio.sleep(0.5)  # allow FE to poll
+        await asyncio.sleep(0.5)
 
         _set_stage(task_id, "mixer")
         await asyncio.sleep(0.5)
@@ -233,13 +232,40 @@ async def _run_approved_generation(task_id: str):
 
         _set_stage(task_id, "suno")
 
-        result = await _orchestrator.decide_and_generate(
-            bpm=params["bpm"],
-            energy=params["energy"],
-            venue=params["venue"],
-            style=params["style"],
-            theme=params.get("theme", ""),
-        )
+        if _orchestrator is not None:
+            # Primary path: use LLM orchestrator agent
+            result = await _orchestrator.decide_and_generate(
+                bpm=params["bpm"],
+                energy=params["energy"],
+                venue=params["venue"],
+                style=params["style"],
+                theme=params.get("theme", ""),
+            )
+        else:
+            # Fallback: direct CometAPI call (no LLM agent)
+            logger.info("Orchestrator unavailable — using direct CometAPI fallback")
+            bpm = params.get("bpm", 140)
+            energy = params.get("energy", 0.7)
+            venue = params.get("venue", "club")
+            style = params.get("style", "ACID_TECHNO")
+
+            prompt = f"{style} at {bpm} BPM"
+            tags = get_style_suggestions(bpm=bpm, energy=energy, venue=venue)
+
+            gen_result = generate_track(prompt=prompt, tags=tags)
+            if "error" in gen_result:
+                raise RuntimeError(f"CometAPI generate failed: {gen_result['error']}")
+
+            task_id_comet = gen_result.get("task_id", "")
+            polled = poll_track(task_id=task_id_comet, max_wait_s=120)
+            if "error" in polled:
+                raise RuntimeError(f"CometAPI poll failed: {polled['error']}")
+
+            result = {
+                "audio_url": polled.get("audio_url"),
+                "task_id": task_id_comet,
+                "agent_output": f"Fallback generation: {style} at {bpm} BPM",
+            }
 
         queue = _load_queue()
         task = _find_task(queue, task_id)
