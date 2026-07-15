@@ -124,6 +124,10 @@ class MassloopState(rx.State):
     first_visit: bool = True
 
     # ── Artist Brand Identity ──
+    # Default artist id used to store/learn identity on the backend. The BE
+    # keeps a single shared artist profile keyed by this id (no per-user auth
+    # yet), so the FE pins it here and loads/binds all identity calls to it.
+    artist_id: str = "massloop_artist"
     artist_name: str = ""
     artist_genre: str = "TECHNO"
     artist_bpm_min: int = 120
@@ -135,6 +139,16 @@ class MassloopState(rx.State):
     artist_saved: bool = False
     track_history: list[dict] = []
     track_ratings: dict[str, int] = {}
+
+    # ── Budget (live infra-layer guardrail) ──
+    budget_remaining: float = -1.0
+    budget_loaded: bool = False
+    budget_error: str = ""
+
+    # ── Artist identity teaching ──
+    learn_message: str = ""
+    learn_status: str = ""
+    is_learning: bool = False
 
     @rx.var
     def artist_energy_pct(self) -> int:
@@ -153,6 +167,76 @@ class MassloopState(rx.State):
         """Mark onboarding as complete and move to stage."""
         self.first_visit = False
         return rx.redirect("/stage")
+
+    def navigate_to_artist(self):
+        """Go to the Artist Identity panel."""
+        return rx.redirect("/artist")
+
+    # ── Artist identity: load from backend ──
+    async def load_artist(self):
+        """Fetch the learned artist profile from the backend and sync state."""
+        try:
+            from .api_client import get_artist_profile
+            data = await get_artist_profile(self.artist_id)
+            if data.get("name"):
+                self.artist_name = data["name"]
+            if data.get("genre"):
+                self.artist_genre = data["genre"]
+            bpm = data.get("bpm_sweet_spot") or []
+            if len(bpm) >= 2:
+                self.artist_bpm_min = int(bpm[0])
+                self.artist_bpm_max = int(bpm[1])
+            if data.get("signature_elements"):
+                self.artist_signature = ", ".join(data["signature_elements"])
+            if data.get("negative_tags"):
+                self.artist_negative_tags = ", ".join(data["negative_tags"])
+            if data.get("tone"):
+                self.artist_tone = data["tone"]
+        except Exception as e:
+            self.learn_status = f"identity load failed: {str(e)[:40]}"
+
+    # ── Artist identity: teach the agent via chat ──
+    def set_learn_message(self, value: str):
+        self.learn_message = value
+
+    async def learn(self):
+        """Send a chat message that teaches the agent the artist's identity."""
+        msg = self.learn_message
+        if not msg.strip():
+            return
+        self.is_learning = True
+        self.learn_status = "teaching agent..."
+        yield
+        try:
+            from .api_client import learn_from_chat
+            result = await learn_from_chat(self.artist_id, msg)
+            self.learn_message = ""
+            count = result.get("interaction_count", 0)
+            self.learn_status = f"✅ learned ({count} interactions)"
+            # Reload the profile so the panel reflects the new identity
+            yield
+            await self.load_artist()
+        except Exception as e:
+            self.learn_status = f"teach failed: {str(e)[:40]}"
+        self.is_learning = False
+
+    # ── Budget: load remaining daily budget ──
+    async def load_budget(self):
+        """Fetch the live remaining daily budget (EUR) from the backend."""
+        try:
+            from .api_client import get_budget
+            data = await get_budget()
+            budget = (data.get("budget") or {})
+            remaining = budget.get("remaining_eur")
+            if remaining is not None:
+                self.budget_remaining = float(remaining)
+                self.budget_loaded = True
+                self.budget_error = ""
+            else:
+                self.budget_error = "no budget field"
+        except Exception as e:
+            self.budget_remaining = -1.0
+            self.budget_error = str(e)[:40]
 
     # ── Orchestrator chat ──
     chat_history: list[dict] = []

@@ -8,6 +8,7 @@ from .pages import (
     health_check, 
     mix_trial_page,
     artist_sound_page,
+    artist_page,
 )
 
 # ── Rave aesthetic palette (suckpuck inspo) ──
@@ -40,3 +41,4 @@ app.add_page(performance_page, route="/stage", title="Massloop · live")
 app.add_page(artist_sound_page, route="/my-sound", title="Massloop · my sound")
 app.add_page(health_check, route="/health", title="Massloop · health")
 app.add_page(mix_trial_page, route="/mix-trial", title="Massloop · mix trial")
+app.add_page(artist_page, route="/artist", title="Massloop · artist identity")

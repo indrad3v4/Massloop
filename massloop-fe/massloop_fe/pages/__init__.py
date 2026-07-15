@@ -7,6 +7,7 @@ from .performance import performance_page
 from .health import health_check
 from .mix_trial_page import mix_trial_page
 from .my_sound import artist_sound_page
+from .artist import artist_page
 
 __all__ = [
     "index",

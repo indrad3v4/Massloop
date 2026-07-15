@@ -33,7 +33,7 @@ def landing_page() -> rx.Component:
                     rx.vstack(
                         rx.text(
                             "Massloop is a stage-confidence amplifier. "
-                            "It leverages a Multi-Agent Orchestrator (MOA) to generate "
+                            "It leverages a single AI orchestrator to generate "
                             "underground electronic music in real-time, allowing you to "
                             "focus on the performance while the AI manages the technical "
                             "grunt work of track structure, energy flow, and sonic cohesion.",
@@ -66,7 +66,7 @@ def landing_page() -> rx.Component:
                 ),
 
                 rx.text(
-                    "demo: $0.50/track · no subscription",
+                    "demo: $0.08–0.15/track · subscription",
                     color=AMBER, font_size="1", margin_top="1rem",
                 ),
 

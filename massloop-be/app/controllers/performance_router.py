@@ -18,6 +18,7 @@ from app.controllers.usecases import (
 )
 from app.models.entities import ArtistProfile, UndergroundStyle, VenueType
 from app.orchestrator.tools import generate_track, poll_track, get_style_suggestions
+from app.services import artist_memory as artist_memory
 import re
 
 router = APIRouter(prefix="/api/performance", tags=["performance"])
@@ -44,6 +45,7 @@ class QueueRequest(BaseModel):
     energy: float = 0.7
     venue: str = "club"
     theme: str = ""
+    artist_id: str = "default_artist"
 
 
 class ApproveRequest(BaseModel):
@@ -203,6 +205,38 @@ def _set_stage(task_id: str, stage: str):
         _save_queue(queue)
 
 
+def _load_artist_brand(artist_id: str) -> dict:
+    """Load the artist's persistent memory and map it to the orchestrator's
+    artist_brand schema so generation reflects identity + history.
+
+    Returns a dict suitable for MusicOrchestratorAgent.decide_and_generate's
+    ``artist_brand`` argument (see app/orchestrator/prompts.build_orchestrator_context).
+    """
+    profile = artist_memory.get_profile(artist_id)
+    learned = profile.get("learned_preferences", {})
+
+    bpm_spot = learned.get("bpm_sweet_spot") or profile.get("bpm_sweet_spot", [120, 160])
+
+    sig = list(set(
+        (profile.get("signature_elements") or [])
+        + (learned.get("signature_elements") or [])
+    ))
+    neg = list(set(
+        (profile.get("negative_tags") or [])
+        + (learned.get("negative_tags") or [])
+    ))
+
+    return {
+        "artist_name": profile.get("name") or artist_id,
+        "artist_genre": profile.get("genre") or "",
+        "artist_signature": ", ".join(sig),
+        "artist_tone": profile.get("tone") or "",
+        "artist_negative_tags": ", ".join(neg),
+        "artist_bpm_min": bpm_spot[0] if bpm_spot else None,
+        "artist_bpm_max": bpm_spot[1] if bpm_spot else None,
+    }
+
+
 async def _run_approved_generation(task_id: str):
     """Background worker: run orchestrator and update queue."""
     queue = _load_queue()
@@ -217,6 +251,13 @@ async def _run_approved_generation(task_id: str):
 
     try:
         params = task["params"]
+        artist_id = params.get("artist_id") or "default_artist"
+
+        # ── Load persistent artist memory so the track reflects identity/history ──
+        # Economy#46 attention ledger: feed the artist's learned brand into the gen
+        # context. Obstacle#66 day-1 draft + Client#94 audience-gap: every generation
+        # now reads the artist's profile (signature sound, BPM sweet spot, avoid list).
+        artist_brand = _load_artist_brand(artist_id)
 
         # ── MOA pipeline stages ──
         _set_stage(task_id, "director")
@@ -241,6 +282,7 @@ async def _run_approved_generation(task_id: str):
                 venue=params["venue"],
                 style=params["style"],
                 theme=params.get("theme", ""),
+                artist_brand=artist_brand,
             )
         else:
             # Fallback: direct CometAPI call (no LLM agent)
@@ -250,8 +292,13 @@ async def _run_approved_generation(task_id: str):
             venue = params.get("venue", "club")
             style = params.get("style", "ACID_TECHNO")
 
+            # Inject artist identity into the prompt when memory is available.
             prompt = f"{style} at {bpm} BPM"
+            if artist_brand.get("signature"):
+                prompt = f"{artist_brand['signature']} — {prompt}"
             tags = get_style_suggestions(bpm=bpm, energy=energy, venue=venue)
+            if artist_brand.get("negative_tags"):
+                tags = f"{tags}, {artist_brand['negative_tags']}"
 
             gen_result = generate_track(prompt=prompt, tags=tags)
             if "error" in gen_result:

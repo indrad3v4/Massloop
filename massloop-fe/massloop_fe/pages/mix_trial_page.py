@@ -100,7 +100,7 @@ def mix_trial_page() -> rx.Component:
                         width="100%",
                     ),
                     rx.button(
-                        "Upgrade to DJ Starter — €9/mo",
+                        "Upgrade to DJ Starter — subscription",
                         background_color=STYLES["AMBER"],
                         color=STYLES["DARK"],
                         font_weight="600",

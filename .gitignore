@@ -14,3 +14,10 @@ venv/
 .venv/
 env/
 logs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/

@@ -53,7 +53,7 @@ def health_check() -> rx.Component:
                         spacing="2",
                         margin_top="1rem",
                     ),
-                    rx.text("gpt-4o-mini · cometsuno adapter · chirp-v4",
+                    rx.text("gpt-4o-mini · CometAPI adapter · chirp-v4",
                             font_size="2", color=SLATE, padding_left="1.5rem"),
 
                     rx.divider(border_color=f"{GREEN}22", margin="1rem 0"),
