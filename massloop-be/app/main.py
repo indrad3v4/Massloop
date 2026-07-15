@@ -13,6 +13,7 @@ from app.controllers.stripe_router import router as stripe_router
 from app.controllers.trial_router import router as trial_router
 from app.controllers.orchestrator_router import router as orchestrator_router, set_orchestrator as set_router_orchestrator
 from app.controllers.artist_router import router as artist_router
+from app.controllers.stream_router import router as stream_router
 from app.orchestrator import MusicOrchestratorAgent
 # Infrastructure layer: budget guardrails (config-driven, enforced on live path)
 from app.services.externals import build_guardrails, BudgetExceededError
@@ -35,11 +36,8 @@ if _MISSING:
 
 app = FastAPI(title="Massloop API", version="0.1.0")
 
-# Build the infrastructure-layer budget guardrail from config and attach it to
-# app state. The live generation path (owned by other subagents) imports
-# `app.main.budget_guardrails` to enforce the daily/per-track cost SLO
-# (docs/roast_infrastructure.md C1). Construction here makes the budget real
-# instead of decorative config.
+# Budget guardrail is built + surfaced via GET /budget (live enforcement
+# SLO is NOT yet consulted on the generation path — tracked as partial fix.
 budget_guardrails = build_guardrails(
     daily_limit_eur=settings.daily_budget_eur,
     max_track_cost_eur=settings.max_track_cost_eur,
@@ -68,8 +66,9 @@ app.include_router(performance_router)
 app.include_router(profile_router)
 app.include_router(stripe_router)
 app.include_router(trial_router)
-app.include_router(orchestrator_router, prefix="/api", tags=["orchestrator"])
+app.include_router(orchestrator_router, tags=["orchestrator"])
 app.include_router(artist_router)
+app.include_router(stream_router)
 
 @app.get("/health")
 async def health():
